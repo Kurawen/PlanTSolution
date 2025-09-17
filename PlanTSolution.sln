@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{3883C848-ADB9-4527-A2A5-3A38D83669FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrations", "Migrations\Migrations.csproj", "{D6D0BFFE-6544-452F-9EE0-875EE3F3EA7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{9DEA7729-A7ED-4356-B5C6-FEE5AFA63E03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3883C848-ADB9-4527-A2A5-3A38D83669FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3883C848-ADB9-4527-A2A5-3A38D83669FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3883C848-ADB9-4527-A2A5-3A38D83669FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3883C848-ADB9-4527-A2A5-3A38D83669FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D0BFFE-6544-452F-9EE0-875EE3F3EA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D0BFFE-6544-452F-9EE0-875EE3F3EA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D0BFFE-6544-452F-9EE0-875EE3F3EA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D0BFFE-6544-452F-9EE0-875EE3F3EA7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DEA7729-A7ED-4356-B5C6-FEE5AFA63E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DEA7729-A7ED-4356-B5C6-FEE5AFA63E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DEA7729-A7ED-4356-B5C6-FEE5AFA63E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DEA7729-A7ED-4356-B5C6-FEE5AFA63E03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CFF49E38-5373-4E3B-B9A5-9C276D5D269C}
+	EndGlobalSection
+EndGlobal
