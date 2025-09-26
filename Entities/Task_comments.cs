@@ -13,14 +13,18 @@ namespace Entities
     {
         public Guid Id { get; set; }
 
+        [Required]
         [ForeignKey("UsersID")]
         public virtual Users User { get; set; }
 
+        [Required]
         [MaxLength(300)]
         public string Content { get; set; }
 
+        [Required]
         public DateTime Created_at { get; set; }
 
+        [Required]  
         [ForeignKey("TasksId")]
         public virtual Tasks Task { get; set; }
 
