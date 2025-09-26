@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    internal class Task_comments
+    public class Task_comments
 
     {
         public Guid Id { get; set; }
