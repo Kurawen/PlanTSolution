@@ -1,4 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Tools;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {   //Задачи
@@ -6,19 +11,23 @@ namespace Entities
     public class Tasks
     {
         public Guid Id { get; set; }
-
+        
+        // Это внешний ключ? Если да то ниже код для метки как внешнего ключа
         [Required]
+        // [ForeingKey(UserId)]
+        //public Users? Users { get; set; } --- аналогично со следущими
         public int Created_by { get; set; }
 
+        // Это внешний ключ?
         [Required]
         public int Assignet_by { get; set; }
 
+        // Это внешний ключ?
         [Required]
         public int Group_id { get; set; }
 
         [Required]
         [MaxLength(50)]
-
         public string Title { get; set; }
 
         [MaxLength(500)]
