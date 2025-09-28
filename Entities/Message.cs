@@ -12,25 +12,25 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    public class Messages
+    public class Message
     {
-        [Key] // не будет лишним указать, что это первичный ключ
-        public Guid MessageId { get; set; }
+        public Guid Id { get; set; }
 
         [Required] // навигационное свойство
-        public int User_id { get; set; }
+        public Guid User_id { get; set; }
 
         [Required] // сам внешний ключ
-        [ForeignKey("User_id")]
-        public virtual Users User { get; set; }
+        [ForeignKey(nameof(User_id))]
+        public virtual User User { get; set; }
 
         [Required] // навигационное свойство
-        public int Channel_id { get; set; }
+        public Guid Channel_id { get; set; }
 
         [Required]
-        [ForeignKey("Channel_id")] // сам внешний ключ
-        public virtual Channels Channel { get; set; }
+        [ForeignKey(nameof(Channel_id))] // сам внешний ключ
+        public virtual Channel Channel { get; set; }
 
+        [MaxLength(1000)]
         [Required]
         public string Content { get; set; } 
         

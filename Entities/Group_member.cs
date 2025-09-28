@@ -12,24 +12,23 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    public class Group_members
+    public class Group_member
     {
-        [Key]
-        public Guid GroupMemberId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        public int User_id { get; set; }
+        public Guid User_id { get; set; }
 
         [Required]
-        [ForeignKey("User_id")]
-        public virtual Users User  { get; set; }
+        [ForeignKey(nameof(User_id))]
+        public virtual User User  { get; set; }
 
         [Required]
-        public int Group_id { get; set; }
+        public Guid Group_id { get; set; }
 
         [Required]
-        [ForeignKey("Group_id")]
-        public virtual Groups Group { get; set; }
+        [ForeignKey(nameof(Group_id))]
+        public virtual Group Group { get; set; }
 
         [Required]
         public string Role { get; set; }

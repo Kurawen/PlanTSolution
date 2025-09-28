@@ -8,10 +8,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 namespace Entities
 {   //Задачи
 
-    public class Tasks
+    public class Task
     {
-        [Key]
-        public Guid TaskId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public int Created_by { get; set; }

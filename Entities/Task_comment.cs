@@ -12,18 +12,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    public class Task_comments // под большим вопросом существования
+    public class Task_comment // под большим вопросом существования
 
     {
-        [key]
-        public Guid TaskCommentId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        public int User_id { get; set; }
+        public Guid User_id { get; set; }
 
         [Required]
-        [ForeignKey("User_id")]
-        public virtual Users User { get; set; }
+        [ForeignKey(nameof(User_id))]
+        public virtual User User { get; set; }
 
         [Required]
         [MaxLength(300)]
@@ -33,11 +32,11 @@ namespace Entities
         public DateTime Created_at { get; set; }
 
         [Required]
-        public int Task_id { get; set; }
+        public Guid Task_id { get; set; }
 
         [Required]  
-        [ForeignKey("Task_id")]
-        public virtual Tasks Task { get; set; }
+        [ForeignKey(nameof(Task_id))]
+        public virtual Task Task { get; set; }
 
     }
 }

@@ -10,10 +10,9 @@ using Microsoft.EntityFrameworkCore.Tools;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 namespace Entities
 {
-    public class Groups
+    public class Group
     {
-        [Key]
-        public Guid GroupId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(30)]

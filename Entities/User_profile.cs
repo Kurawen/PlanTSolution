@@ -12,23 +12,25 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    public class Channels
+    public class User_profile
+
     {
-        [Key]
-        public Guid ChannelId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        public int Group_id { get; set; }
-
-        [ForeignKey("Group_id")]
-        public virtual Groups Group { get; set; }
+        public Guid User_id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        [ForeignKey(nameof(User_id))]
+        public virtual Users User { get; set; }
         
-        [Required]
-        public Boolean IsPrivate { get; set; }
+        [Required] // под большим вопросом существования
+        public string Bio {  get; set; }
 
-        
+        [Required]
+        public string Phone_number { get; set; }
+
+
+        public string Avatar_url { get; set; }
     }
 }

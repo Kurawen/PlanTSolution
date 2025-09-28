@@ -11,14 +11,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
-    public class Users
+    public class User
     {
-        [Key]
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
+        [MaxLength(36)]
         [Required]
         public string First_Name { get; set; }
 
+        [MaxLength(36)]
         [Required]
         public string Last_Name { get; set; }
 
