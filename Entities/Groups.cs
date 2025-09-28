@@ -12,7 +12,8 @@ namespace Entities
 {
     public class Groups
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid GroupId { get; set; }
 
         [Required]
         [MaxLength(30)]
@@ -25,7 +26,7 @@ namespace Entities
         [Required]
         public DateTime Created_at { get; set; }
 
-        [Required]
+        [Required] // под большим вопросом существования
         public Boolean Is_public { get; set; }
 
     }

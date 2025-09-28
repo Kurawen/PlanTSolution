@@ -13,14 +13,21 @@ namespace Entities
 {
     public class Notification
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid NotificationId { get; set; }
 
         [Required]
-        [ForeignKey("MessagesId")]
-        public virtual Messages Messages { get; set; }
+        public int Message_id { get; set; }
 
         [Required]
-        [ForeignKey("TasksId")]
-        public virtual Tasks Tasks { get; set; }
+        [ForeignKey("Message_id")]
+        public virtual Messages Message { get; set; }
+
+        [Required]
+        public int Task_id { get; set; }
+
+        [Required]
+        [ForeignKey("Task_id")]
+        public virtual Tasks Task { get; set; }
     }
 }

@@ -14,10 +14,14 @@ namespace Entities
 {
     public class User_password
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid UserPasswordId { get; set; }
 
         [Required]
-        [ForeignKey("UsersId")]
+        public int User_id { get; set; }
+
+        [Required]
+        [ForeignKey("User_id")]
         public virtual Users User { get; set; }
 
         [Required]

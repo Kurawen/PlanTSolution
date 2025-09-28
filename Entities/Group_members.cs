@@ -14,18 +14,26 @@ namespace Entities
 {
     public class Group_members
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid GroupMemberId { get; set; }
 
         [Required]
-        [ForeignKey("UsersId")]
+        public int User_id { get; set; }
+
+        [Required]
+        [ForeignKey("User_id")]
         public virtual Users User  { get; set; }
 
         [Required]
-        [ForeignKey("GrupsId")]
-        public virtual Groups Group {  get; set; }
+        public int Group_id { get; set; }
 
         [Required]
-        public string Role {  get; set; }
+        [ForeignKey("Group_id")]
+        public virtual Groups Group { get; set; }
+
+        [Required]
+        public string Role { get; set; }
+
         [Required]
         public DateTime Joined_at { get; set; }
 

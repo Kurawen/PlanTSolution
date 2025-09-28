@@ -14,13 +14,18 @@ namespace Entities
 {
     public class Channels
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid ChannelId { get; set; }
 
-        [ForeignKey("GroupsId")]
-        public virtual Groups Group {  get; set; }
+        [Required]
+        public int Group_id { get; set; }
+
+        [ForeignKey("Group_id")]
+        public virtual Groups Group { get; set; }
 
         [Required]
         public string Name { get; set; }
+        
         [Required]
         public Boolean IsPrivate { get; set; }
 

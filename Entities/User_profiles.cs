@@ -15,11 +15,17 @@ namespace Entities
     public class Users_profiels
 
     {
+        [Key]
+        public Guid UserProfileId { get; set; }
+
         [Required]
-        [ForeignKey("UserId")]
+        public int User_id { get; set; }
+
+        [Required]
+        [ForeignKey("User_id")]
         public virtual Users User { get; set; }
         
-        [Required]
+        [Required] // под большим вопросом существования
         public string Bio {  get; set; }
 
         [Required]
@@ -27,7 +33,5 @@ namespace Entities
 
 
         public string Avatar_url { get; set; }
-
-
     }
 }

@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Tools;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-
 namespace Entities
 {
     public class AppDbContext : DbContext
@@ -23,7 +22,7 @@ namespace Entities
         public DbSet<Notification> Notification => Set<Notification>(); 
         public DbSet<Messages> Messages => Set<Messages>();
 
-        public DbSet<Groups>    Groups => Set<Groups>();
+        public DbSet<Groups> Groups => Set<Groups>();
 
         public DbSet<Group_members> Group_members => Set<Group_members>();
         

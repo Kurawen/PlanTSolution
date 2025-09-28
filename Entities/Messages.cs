@@ -14,15 +14,22 @@ namespace Entities
 {
     public class Messages
     {
-        public Guid Id { get; set; }
+        [Key] // не будет лишним указать, что это первичный ключ
+        public Guid MessageId { get; set; }
+
+        [Required] // навигационное свойство
+        public int User_id { get; set; }
+
+        [Required] // сам внешний ключ
+        [ForeignKey("User_id")]
+        public virtual Users User { get; set; }
+
+        [Required] // навигационное свойство
+        public int Channel_id { get; set; }
 
         [Required]
-        [ForeignKey("UsersId")]
-        public virtual Users Users { get; set; }
-
-        [Required]
-        [ForeignKey("ChanelsId")]
-        public virtual Channels Channels { get; set; }  
+        [ForeignKey("Channel_id")] // сам внешний ключ
+        public virtual Channels Channel { get; set; }
 
         [Required]
         public string Content { get; set; } 

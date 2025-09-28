@@ -13,7 +13,8 @@ namespace Entities
 {
     public class Users
     {
-        public Guid Id { get; set; }
+        [Key]
+        public Guid UserId { get; set; }
 
         [Required]
         public string First_Name { get; set; }
