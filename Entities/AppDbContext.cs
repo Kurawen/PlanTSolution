@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Tools;
+// using Microsoft.EntityFrameworkCore.Tools;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
 {
     public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        // public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
 
         public DbSet<User> Users { get; set; }
         public DbSet<User_profile> UserProfiles { get; set; }
@@ -31,16 +32,16 @@ namespace Entities
             modelBuilder.HasDefaultSchema("app");
             
             // Настройка таблиц
-            modelBuilder.Entity<User>().ToTable("users");
-            modelBuilder.Entity<UserProfile>().ToTable("user_profiles");
-            modelBuilder.Entity<Task>().ToTable("tasks");
-            modelBuilder.Entity<UserPassword>().ToTable("user_passwords");
-            modelBuilder.Entity<TaskComment>().ToTable("task_comments");
-            modelBuilder.Entity<Notification>().ToTable("notifications");
-            modelBuilder.Entity<Message>().ToTable("messages");
-            modelBuilder.Entity<Group>().ToTable("groups");
-            modelBuilder.Entity<GroupMember>().ToTable("group_members");
-            modelBuilder.Entity<Channel>().ToTable("channels");
+            // modelBuilder.Entity<User>().ToTable("users");
+            // modelBuilder.Entity<UserProfile>().ToTable("user_profiles");
+            // modelBuilder.Entity<Task>().ToTable("tasks");
+            // modelBuilder.Entity<UserPassword>().ToTable("user_passwords");
+            // modelBuilder.Entity<TaskComment>().ToTable("task_comments");
+            // modelBuilder.Entity<Notification>().ToTable("notifications");
+            // modelBuilder.Entity<Message>().ToTable("messages");
+            // modelBuilder.Entity<Group>().ToTable("groups");
+            // modelBuilder.Entity<GroupMember>().ToTable("group_members");
+            // modelBuilder.Entity<Channel>().ToTable("channels");
 
         }
     }

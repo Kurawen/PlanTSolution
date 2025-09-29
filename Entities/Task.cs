@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Tools;
+// using Microsoft.EntityFrameworkCore.Tools;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities

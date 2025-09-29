@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Tools;
+// using Microsoft.EntityFrameworkCore.Tools;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Entities
@@ -22,7 +22,7 @@ namespace Entities
 
         [Required]
         [ForeignKey(nameof(User_id))]
-        public virtual Users User { get; set; }
+        public virtual User User { get; set; }
         
         [Required] // под большим вопросом существования
         public string Bio {  get; set; }
