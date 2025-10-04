@@ -1,11 +1,11 @@
 services:
   db:
-    container_name: corp-db
+    container_name: plant
     image: postgres:17.6
     environment:
-      POSTGRES_DB: "corpdb"
+      POSTGRES_DB: "PlanT"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_PASSWORD: "123"
     ports:
       - "5433:5432"
     volumes:

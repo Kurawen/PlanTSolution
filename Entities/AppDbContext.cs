@@ -14,7 +14,6 @@ namespace Entities
     {
         // public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-
         public DbSet<User> Users { get; set; }
         public DbSet<User_profile> UserProfiles { get; set; }
         public DbSet<Task> Task { get; set; }
@@ -26,11 +25,6 @@ namespace Entities
         public DbSet<Group_member> GroupMembers { get; set; }
         public DbSet<Channel> Channels { get; set; }
 
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     optionsBuilder.UseNpgsql("Host=localhost;Database=corpdb;Username=postgres;Password=postgres;");
-        // }
-
         public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         {
             public AppDbContext CreateDbContext(string[] args)
@@ -41,26 +35,5 @@ namespace Entities
                 return new AppDbContext(optionsBuilder.Options);
             }
         }
-
-
-
-        // protected override void OnModelCreating(ModelBuilder modelBuilder)
-        // {
-        //     // Установка схемы
-        //     modelBuilder.HasDefaultSchema("app");
-
-        // Настройка таблиц
-        // modelBuilder.Entity<User>().ToTable("users");
-        // modelBuilder.Entity<UserProfile>().ToTable("user_profiles");
-        // modelBuilder.Entity<Task>().ToTable("tasks");
-        // modelBuilder.Entity<UserPassword>().ToTable("user_passwords");
-        // modelBuilder.Entity<TaskComment>().ToTable("task_comments");
-        // modelBuilder.Entity<Notification>().ToTable("notifications");
-        // modelBuilder.Entity<Message>().ToTable("messages");
-        // modelBuilder.Entity<Group>().ToTable("groups");
-        // modelBuilder.Entity<GroupMember>().ToTable("group_members");
-        // modelBuilder.Entity<Channel>().ToTable("channels");
-
-        // }
     }
 }

@@ -43,7 +43,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("Group_id");
 
-                    b.ToTable("Channels");
+                    b.ToTable("Channels", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Group", b =>
@@ -70,7 +70,7 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Group_member", b =>
@@ -98,7 +98,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("GroupMembers");
+                    b.ToTable("GroupMembers", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Message", b =>
@@ -127,7 +127,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Notification", b =>
@@ -148,7 +148,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("Task_id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Task", b =>
@@ -191,7 +191,7 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Task");
+                    b.ToTable("Task", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Task_comment", b =>
@@ -220,7 +220,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("TaskComments");
+                    b.ToTable("TaskComments", (string)null);
                 });
 
             modelBuilder.Entity("Entities.User", b =>
@@ -248,7 +248,7 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Entities.User_password", b =>
@@ -268,7 +268,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("UserPasswords");
+                    b.ToTable("UserPasswords", (string)null);
                 });
 
             modelBuilder.Entity("Entities.User_profile", b =>
@@ -296,7 +296,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Channel", b =>
