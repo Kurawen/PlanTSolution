@@ -1,21 +1,47 @@
+<!-- 
+<template> - для HTML разметки
+<script> - для логики компонента(с использованием Composition API или Options API)
+<style> - для стилей      
+-->
+
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+  import { RouterLink, RouterView } from 'vue-router'
+  import HelloWorld from './components/HelloWorld.vue'
+
+
+  import { ref } from 'vue'
+  const count = ref(0)
+
+  import { createApp } from 'vue'
+  import App from './App.vue'
 </script>
 
+const app = createApp()
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
+  <header id="shapka">
+    <nav class="navbar">
+      <a href="PlanT.com"><img src="" alt="PlanT"></a>
+      <a href="" class="nav_glav">Главная</a>
+      <a href="" class="">Настройки</a>
+    </nav>
     <div class="wrapper">
-      <HelloWorld msg="here we are" />
-
-      <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav> -->
+      <HelloWorld msg="Ah shit, here we go again." />
     </div>
+
+    <button @click="count++">Кликер: {{ count }}</button>
   </header>
+  <main id="main">
+    <div>
+
+    </div>
+  </main>
+  <footer id="dno">
+    <div>
+
+    </div>
+  </footer>
+ 
   <!-- <RouterView /> -->
 </template>
 
@@ -23,6 +49,10 @@ import HelloWorld from './components/HelloWorld.vue'
 header {
   line-height: 1.5;
   max-height: 100vh;
+}
+
+button {
+  font-weight: bold;
 }
 
 .logo {
