@@ -21,7 +21,7 @@ const app = createApp()
 <template>
   <header id="shapka">
     <nav class="navbar">
-      <a href="PlanT.com"><img src="" alt="PlanT"></a>
+      <a href="PlanT.ru"><img src="" alt="PlanT"></a>
       <a href="" class="nav_glav">Главная</a>
       <a href="" class="">Настройки</a>
     </nav>
