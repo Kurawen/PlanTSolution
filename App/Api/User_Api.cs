@@ -73,7 +73,7 @@ namespace App.Api
             });
 
             // DELETE - удалить пользователя
-            api.MapDelete("/{id}", async (int id, AppDbContext db) =>
+            api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
             {
                 // получаем пользователя по id
                 var user = await db.Users.FindAsync(id);
