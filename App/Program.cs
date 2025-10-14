@@ -3,13 +3,16 @@ using App;
 using Entities;
 using System.Drawing;
 
+// база для api
 var builder = WebApplication.CreateBuilder(args);
 
+// базовые сервисы
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// база для приложения
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -19,23 +22,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// регистрация обработчика GET-запроса на корневой путь "/"
-app.MapGet("/", () => "Bebra tuc-tuc-tuc");
-
+// ¯\_(ツ)_/¯
 app.Run(async (context) => await context.Response.SendFileAsync("me.jpg"));
 
-// app.MapGet("/", () => "Testing GET");
-// app.MapPost("/", () => "Testing POST");
-// app.MapPut("/", () => "Testing PUT");
-// app.MapDelete("/", () => "Testing DELETE");
-// app.MapPatch("/", () => "Testing PATCH");
-
-// app.MapMethods("/", new[] { "OPTIONS" }, () => "Testing OPTIONS");
-
+// база для api
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseRouting();
 
+// регистрация обработчика GET-запроса на корневой путь "/"
 // видимо подвязка к запуску сборки
 // app.MapGroup("/").MapChannelApi();
 // app.MapGroup("/").MapGroupApi();
@@ -44,7 +40,7 @@ app.MapControllers();
 // app.MapGroup("/").MapNotificationApi();
 // app.MapGroup("/").MapTaskApi();
 // app.MapGroup("/").MapTaskCommentApi();
-// app.MapGroup("/").MapUserApi();
+app.MapGroup("/user").MapUserApi();
 // app.MapGroup("/").MapUserPasswordApi();
 // app.MapGroup("/").MapUserProfileApi();
 

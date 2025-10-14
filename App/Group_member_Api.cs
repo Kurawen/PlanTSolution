@@ -3,9 +3,9 @@ using Entities;
 
 namespace App
 {
-    public static class User_Api
+    public static class Group_member_Api
     {
-        public static RouteGroupBuilder MapUserApi(this RouteGroupBuilder api)
+        public static RouteGroupBuilder MapGroupMemberApi(this RouteGroupBuilder api)
         {
 
 

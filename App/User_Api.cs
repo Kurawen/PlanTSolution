@@ -3,12 +3,10 @@ using Entities;
 
 namespace App
 {
-    public static class Task_Api
+    public static class User_Api
     {
-        public static RouteGroupBuilder MapTaskApi(this RouteGroupBuilder api)
+        public static RouteGroupBuilder MapUserApi(this RouteGroupBuilder api)
         {
-
-
 
 
             return api;
