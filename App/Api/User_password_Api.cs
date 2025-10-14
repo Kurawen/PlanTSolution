@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Entities;
 
-namespace App
+namespace App.Api
 {
     public static class User_password_Api
     {

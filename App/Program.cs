@@ -1,14 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using App;
+using App.Api;
 using Entities;
 using System.Drawing;
 
 // база для api
 var builder = WebApplication.CreateBuilder(args);
 
+// конфигурация бд(смотри appsettings.json)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // базовые сервисы
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -23,25 +26,24 @@ if (app.Environment.IsDevelopment())
 }
 
 // ¯\_(ツ)_/¯
-app.Run(async (context) => await context.Response.SendFileAsync("me.jpg"));
+app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapControllers();
 app.UseRouting();
+app.MapControllers();
 
-// регистрация обработчика GET-запроса на корневой путь "/"
-// видимо подвязка к запуску сборки
-// app.MapGroup("/").MapChannelApi();
-// app.MapGroup("/").MapGroupApi();
-// app.MapGroup("/").MapGroupMemberApi();
-// app.MapGroup("/").MapMessageApi();
-// app.MapGroup("/").MapNotificationApi();
-// app.MapGroup("/").MapTaskApi();
-// app.MapGroup("/").MapTaskCommentApi();
-app.MapGroup("/user").MapUserApi();
-// app.MapGroup("/").MapUserPasswordApi();
-// app.MapGroup("/").MapUserProfileApi();
+// регистрации api
+app.MapGroup("/channels").MapChannelApi();
+app.MapGroup("/groups").MapGroupApi();
+app.MapGroup("/group_members").MapGroupMemberApi();
+app.MapGroup("/messages").MapMessageApi();
+app.MapGroup("/notifications").MapNotificationApi();
+app.MapGroup("/tasks").MapTaskApi();
+app.MapGroup("/task_comments").MapTaskCommentApi();
+app.MapGroup("/users").MapUserApi();
+app.MapGroup("/user_passwords").MapUserPasswordApi();
+app.MapGroup("/user_profiles").MapUserProfileApi();
 
 app.Run();
