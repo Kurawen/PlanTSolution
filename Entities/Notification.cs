@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-// using Microsoft.EntityFrameworkCore.Tools;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 namespace Entities
 {
     public class Notification
@@ -16,17 +8,25 @@ namespace Entities
         public Guid Id { get; set; }
 
         [Required]
-        public Guid Message_id { get; set; }
+        public Guid User_id { get; set; } // Добавил User_id - кому предназначено уведомление
 
         [Required]
-        [ForeignKey(nameof(Message_id))]
-        public virtual Message Message { get; set; }
+        public Guid Message_id { get; set; }
 
         [Required]
         public Guid Task_id { get; set; }
 
         [Required]
-        [ForeignKey(nameof(Task_id))]
-        public virtual Task Task { get; set; }
+        [MaxLength(20)]
+        public string Type { get; set; } // "message", "task_assigned", "task_completed" и т.д.
+
+        [MaxLength(500)]
+        public string Content { get; set; }
+
+        [Required]
+        public bool Is_read { get; set; } = false;
+
+        [Required]
+        public DateTime Created_at { get; set; }
     }
 }

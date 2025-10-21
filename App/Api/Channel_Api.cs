@@ -7,87 +7,153 @@ namespace App.Api
     {
         public static RouteGroupBuilder MapChannelApi(this RouteGroupBuilder api)
         {
-            // POST - создать пользователя
-            api.MapPost("/", async (User user, AppDbContext db) =>
+            // POST - создать канал
+            api.MapPost("/", async (Channel channel, AppDbContext db) =>
             {
                 // Валидация обязательных полей
-                if (string.IsNullOrEmpty(user.Email))
-                    return Results.BadRequest("Email is required");
+                if (string.IsNullOrEmpty(channel.Name))
+                    return Results.BadRequest("Channel name is required");
 
-                // Проверка уникальности email
-                var existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-                if (existingUser != null)
-                    return Results.BadRequest("User with this email already exists");
+                if (channel.Group_id == Guid.Empty)
+                    return Results.BadRequest("Group ID is required");
 
-                // Создаем нового пользователя
-                var newUser = new User
+                // Проверка существования группы
+                var groupExists = await db.Groups.AnyAsync(g => g.Id == channel.Group_id);
+                if (!groupExists)
+                    return Results.BadRequest("Group not found");
+
+                // Проверка уникальности имени канала в группе
+                var existingChannel = await db.Channels
+                    .FirstOrDefaultAsync(c => c.Name == channel.Name && c.Group_id == channel.Group_id);
+                if (existingChannel != null)
+                    return Results.BadRequest("Channel with this name already exists in the group");
+
+                // Создаем новый канал
+                var newChannel = new Channel
                 {
                     Id = Guid.NewGuid(),
-                    First_Name = user.First_Name,
-                    Last_Name = user.Last_Name,
-                    Email = user.Email,
-                    Created_at = DateTime.UtcNow  // Автоматически устанавливаем дату создания
+                    Group_id = channel.Group_id,
+                    Name = channel.Name,
+                    IsPrivate = channel.IsPrivate
                 };
 
-                db.Users.Add(newUser);
+                db.Channels.Add(newChannel);
                 await db.SaveChangesAsync();
-                return Results.Created($"/users/{newUser.Id}", newUser);
+                return Results.Created($"/channels/{newChannel.Id}", newChannel);
             });
 
-            // GET - получить всех пользователей
-            api.MapGet("/", async (AppDbContext db) => await db.Users.ToListAsync());
+            // GET - получить все каналы
+            api.MapGet("/", async (AppDbContext db) => await db.Channels.ToListAsync());
 
-            // GET - получить одного пользователя
+            // GET - получить все каналы группы
+            api.MapGet("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
+            {
+                var channels = await db.Channels
+                    .Where(c => c.Group_id == groupId)
+                    .ToListAsync();
+                return Results.Ok(channels);
+            });
+
+            // GET - получить один канал по ID
             api.MapGet("/{id}", async (Guid id, AppDbContext db) =>
             {
-                // получаем пользователя по id
-                var user = await db.Users.FindAsync(id);
-            
-            
-                // найден или не найден, вот в чем вопрос
-                return user is null ? Results.NotFound() : Results.Ok(user);
+                var channel = await db.Channels.FindAsync(id);
+                return channel is null ? Results.NotFound() : Results.Ok(channel);
             });
-            
-            // PUT - обновить пользователя
-            api.MapPut("/{id}", async (Guid id, User userData, AppDbContext db) =>
+
+            // GET - получить канал с данными группы
+            api.MapGet("/{id}/with-group", async (Guid id, AppDbContext db) =>
             {
-                var user = await db.Users.FindAsync(id);
-                if (user is null) return Results.NotFound();
+                var result = await (
+                    from channel in db.Channels
+                    join group in db.Groups on channel.Group_id equals group.Id
+                    where channel.Id == id
+                    select new
+                    {
+                        Channel = channel,
+                        GroupInfo = new
+                        {
+                            group.Name,
+                            group.Description
+                        }
+                    }
+                ).FirstOrDefaultAsync();
 
-                // Проверка уникальности email (если email изменен)
-                if (user.Email != userData.Email)
-                {
-                    var emailExists = await db.Users.AnyAsync(u => u.Email == userData.Email && u.Id != id);
-                    if (emailExists)
-                        return Results.BadRequest("User with this email already exists");
-                }
+            return result is null ? Results.NotFound() : Results.Ok(result);
+        });
 
-                // Обновляем поля пользователя
-                user.First_Name = userData.First_Name;
-                user.Last_Name = userData.Last_Name;
-                user.Email = userData.Email;
-                // Created_at не обновляем - это неизменяемое поле
-
-                await db.SaveChangesAsync();
-                return Results.Ok(user);
-            });
-
-            // DELETE - удалить пользователя
-            api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
+            // GET - получить все публичные каналы группы
+            api.MapGet("/group/{groupId}/public", async(Guid groupId, AppDbContext db) =>
             {
-                // получаем пользователя по id
-                var user = await db.Users.FindAsync(id);
-
-                // если не найден, отправляем статусный код и сообщение об ошибке
-                if (user is null) return Results.NotFound();
-
-                // если пользователь найден, удаляем его
-                db.Users.Remove(user);
-                await db.SaveChangesAsync();
-                return Results.NoContent();
+                var publicChannels = await db.Channels
+                    .Where(c => c.Group_id == groupId && !c.IsPrivate)
+                    .ToListAsync();
+                return Results.Ok(publicChannels);
             });
 
-            return api;
+            // GET - получить все приватные каналы группы (для администраторов)
+            api.MapGet("/group/{groupId}/private", async(Guid groupId, AppDbContext db) =>
+            {
+                var privateChannels = await db.Channels
+                    .Where(c => c.Group_id == groupId && c.IsPrivate)
+                    .ToListAsync();
+                return Results.Ok(privateChannels);
+            });
+
+// PUT - обновить канал
+api.MapPut("/{id}", async (Guid id, Channel channelData, AppDbContext db) =>
+{
+    var channel = await db.Channels.FindAsync(id);
+    if (channel is null) return Results.NotFound();
+
+    // Group_id не обновляем - канал нельзя перемещать между группами
+
+    // Проверка уникальности имени канала в группе (если имя изменено)
+    if (channel.Name != channelData.Name)
+    {
+        var nameExists = await db.Channels
+            .AnyAsync(c => c.Name == channelData.Name &&
+                          c.Group_id == channel.Group_id &&
+                          c.Id != id);
+        if (nameExists)
+            return Results.BadRequest("Channel with this name already exists in the group");
+    }
+
+    // Обновляем поля канала
+    channel.Name = channelData.Name;
+    channel.IsPrivate = channelData.IsPrivate;
+
+    await db.SaveChangesAsync();
+    return Results.Ok(channel);
+});
+
+// DELETE - удалить канал
+api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
+{
+    var channel = await db.Channels.FindAsync(id);
+    if (channel is null) return Results.NotFound();
+
+    db.Channels.Remove(channel);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+// DELETE - удалить все каналы группы
+api.MapDelete("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
+{
+    var channels = await db.Channels
+        .Where(c => c.Group_id == groupId)
+        .ToListAsync();
+
+    if (!channels.Any())
+        return Results.NotFound("No channels found for this group");
+
+    db.Channels.RemoveRange(channels);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+return api;
         }
     }
 }
