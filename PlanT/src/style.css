@@ -1,0 +1,14 @@
+:root {
+    --border-color: #DEE1E6FF;
+    --text-color: #565D6DFF;
+    --bg-color: #f8f8f8;
+    --text-header: "Nunito Sans", sans-serif;
+    --text-font: "Rubik", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--text-font);
+}
