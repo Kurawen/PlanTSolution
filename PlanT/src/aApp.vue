@@ -45,8 +45,22 @@ const handleGuestLogin = () => {
 
 </script>
 
+
+
 <template>
-    <MainTemplate @open-auth="openAuth">
+    <div id="app">
+        <!-- шапка -->
+        <header id="shapka">
+            <nav class="navbar">
+                <div class="nav-title">
+                    <img src="./assets/plant-logo.svg" alt="растение" class="plant-dev">
+                    <a href="#" class="nav-logo">PlanT</a>
+                </div>
+                <a href="#" class="nav-link">Главная</a>
+                <button class="login-btn" @click="openAuth('login')">Войти в аккаунт</button>
+            </nav>
+        </header>
+
         <!-- Основной контент -->
         <main id="main">
             <!-- работайте над задачами -->
@@ -86,7 +100,7 @@ const handleGuestLogin = () => {
 
                     <div class="keys-card">
                         <div class="keys-name">
-                            <img src="./assets/message.svg" alt="растение в горшке" class="keys-icon">
+                            <img src="../assets/message.svg" alt="растение в горшке" class="keys-icon">
                             <h3>Коммуникация</h3>
                         </div>
                         <p class="keys-desc">Взаимодействуйте с вашей командой.</p>
@@ -105,6 +119,18 @@ const handleGuestLogin = () => {
             </section>
         </main>
 
+        <!-- подвал -->
+        <footer class="dno">
+            <p>2025</p>
+            <p>© PlanT</p>
+            <a href="https://t.me/myfavoritejumoreski" target="_blank"><img src="./assets/telegram.svg" alt="телеграм" id="telegram-icon"></a>
+        </footer>
+
+
+
+
+
+
         <!-- модальное окно авторизации/регистрации -->
         <div v-if="showAuth" class="auth-modal-overlay" @click="closeAuth">
             <div class="auth-modal-content" @click.stop>
@@ -119,13 +145,83 @@ const handleGuestLogin = () => {
 
         <!-- модальное окно в разработке -->
         <DevelopingModalWindow v-if="showModal" @close="closeModal"/>
-        
-
-        
-    </MainTemplate>
+    </div>
 </template>
 
 <style>
+.plant-dev {
+    max-width: 50px;
+    height: auto;
+}
+
+.plant-dev-main {
+    max-width: 150px;
+    height: auto;
+}
+
+#app {
+    /* min-height: 100vh; */
+    display: flex;
+    flex-direction: column;
+}
+
+/* шапка */
+#shapka {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    margin: 0 auto;
+    font-size: 1.4rem;
+    background-color: white;
+}
+
+.nav-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: var(--text-header);
+    text-decoration: none;
+}
+
+.nav-link {
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.login-btn {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    /* font-size: 1rem; */
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-btn:hover {
+    background: #f5f5f5;
+}
+
+/* основной контент */
+#main {
+    flex: 1;
+}
+
 /* работа над задачами */
 .tasks {
     background-color: var(--bg-color);
@@ -256,7 +352,6 @@ const handleGuestLogin = () => {
     margin-bottom: 2rem;
     font-family: var(--text-header);
     font-weight: 600;
-    color: black;
 }
 
 .prod-btn {
@@ -301,31 +396,31 @@ const handleGuestLogin = () => {
 
 
 .auth-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .auth-modal-content {
-    animation: slideIn 0.3s ease-out;
+  animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 

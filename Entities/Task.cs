@@ -1,28 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-// using Microsoft.EntityFrameworkCore.Tools;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities
-{   //Задачи
-
+{
     public class Task
     {
         public Guid Id { get; set; }
 
         [Required]
-        public int Created_by { get; set; }
+        public Guid Created_by { get; set; } // ID пользователя, который создал задачу
 
-        // Это внешний ключ?
-        //[Required]
-        //public int Assigned_by { get; set; }
+        [Required]
+        public Guid Assigned_to { get; set; } // ID пользователя, которому назначена задача
 
-        // Это внешний ключ?
-        // [Required]
-        // [ForeignKey("GroupId")]
-        // public virtual Groups Groups { get; set; }
+        [Required]
+        public Guid Group_id { get; set; } // ID группы, к которой относится задача
 
         [Required]
         [MaxLength(50)]
@@ -31,21 +23,21 @@ namespace Entities
         [MaxLength(500)]
         public string Description { get; set; }
 
-        [Required] // то есть NOT NULL
-        [MaxLength(10)] // ограничение
-        public string Status { get; set; }
+        [Required]
+        [MaxLength(20)]
+        public string Status { get; set; } = "pending"; // pending, in_progress, completed, cancelled
 
         [Required]
         [MaxLength(10)]
-        public string Priority { get; set; }
+        public string Priority { get; set; } = "medium"; // low, medium, high, urgent
 
-        [Required] // дедлайн
+        [Required]
         public DateTime Due_date { get; set; }
 
-        [Required] // когда создана
+        [Required]
         public DateTime Created_at { get; set; }
 
-        [Required] // время измнения задачи
+        [Required]
         public DateTime Updated_at { get; set; }
     }
 }
