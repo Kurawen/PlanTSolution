@@ -74,25 +74,25 @@ namespace App.Api
                     Updated_at = DateTime.UtcNow
                 };
 
-                db.Tasks.Add(newTask);
+                db.Task.Add(newTask);
                 await db.SaveChangesAsync();
                 return Results.Created($"/tasks/{newTask.Id}", newTask);
             });
 
             // GET - получить все задачи
-            api.MapGet("/", async (AppDbContext db) => await db.Tasks.ToListAsync());
+            api.MapGet("/", async (AppDbContext db) => await db.Task.ToListAsync());
 
             // GET - получить одну задачу по ID
             api.MapGet("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 return task is null ? Results.NotFound() : Results.Ok(task);
             });
 
             // GET - получить задачи пользователя (где он исполнитель)
             api.MapGet("/assigned-to/{userId}", async (Guid userId, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Assigned_to == userId)
                     .OrderByDescending(t => t.Created_at)
                     .ToListAsync();
@@ -102,7 +102,7 @@ namespace App.Api
             // GET - получить задачи созданные пользователем
             api.MapGet("/created-by/{userId}", async (Guid userId, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Created_by == userId)
                     .OrderByDescending(t => t.Created_at)
                     .ToListAsync();
@@ -112,7 +112,7 @@ namespace App.Api
             // GET - получить задачи группы
             api.MapGet("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Group_id == groupId)
                     .OrderByDescending(t => t.Created_at)
                     .ToListAsync();
@@ -122,7 +122,7 @@ namespace App.Api
             // GET - получить задачи по статусу
             api.MapGet("/status/{status}", async (string status, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Status == status.ToLower())
                     .OrderByDescending(t => t.Created_at)
                     .ToListAsync();
@@ -132,7 +132,7 @@ namespace App.Api
             // GET - получить задачи по приоритету
             api.MapGet("/priority/{priority}", async (string priority, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Priority == priority.ToLower())
                     .OrderByDescending(t => t.Created_at)
                     .ToListAsync();
@@ -142,7 +142,7 @@ namespace App.Api
             // GET - получить просроченные задачи
             api.MapGet("/overdue", async (AppDbContext db) =>
             {
-                var overdueTasks = await db.Tasks
+                var overdueTasks = await db.Task
                     .Where(t => t.Due_date < DateTime.UtcNow && t.Status != "completed" && t.Status != "cancelled")
                     .OrderBy(t => t.Due_date)
                     .ToListAsync();
@@ -153,7 +153,7 @@ namespace App.Api
             api.MapGet("/{id}/with-details", async (Guid id, AppDbContext db) =>
             {
                 var taskWithDetails = await (
-                    from task in db.Tasks
+                    from task in db.Task
                     join creator in db.Users on task.Created_by equals creator.Id
                     join assignee in db.Users on task.Assigned_to equals assignee.Id
                     join groupObj in db.Groups on task.Group_id equals groupObj.Id
@@ -173,7 +173,7 @@ namespace App.Api
             // PUT - обновить задачу
             api.MapPut("/{id}", async (Guid id, Task taskData, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 if (task is null) return Results.NotFound();
 
                 // Проверка существования нового исполнителя (если изменен)
@@ -222,7 +222,7 @@ namespace App.Api
             // PATCH - изменить статус задачи
             api.MapPatch("/{id}/status", async (Guid id, string status, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 if (task is null) return Results.NotFound();
 
                 var validStatuses = new[] { "pending", "in_progress", "completed", "cancelled" };
@@ -239,7 +239,7 @@ namespace App.Api
             // PATCH - изменить приоритет задачи
             api.MapPatch("/{id}/priority", async (Guid id, string priority, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 if (task is null) return Results.NotFound();
 
                 var validPriorities = new[] { "low", "medium", "high", "urgent" };
@@ -256,7 +256,7 @@ namespace App.Api
             // PATCH - переназначить задачу
             api.MapPatch("/{id}/assign", async (Guid id, Guid newAssigneeId, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 if (task is null) return Results.NotFound();
 
                 var assigneeExists = await db.Users.AnyAsync(u => u.Id == newAssigneeId);
@@ -279,10 +279,10 @@ namespace App.Api
             // DELETE - удалить задачу
             api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var task = await db.Tasks.FindAsync(id);
+                var task = await db.Task.FindAsync(id);
                 if (task is null) return Results.NotFound();
 
-                db.Tasks.Remove(task);
+                db.Task.Remove(task);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -290,14 +290,14 @@ namespace App.Api
             // DELETE - удалить все задачи группы
             api.MapDelete("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
             {
-                var tasks = await db.Tasks
+                var tasks = await db.Task
                     .Where(t => t.Group_id == groupId)
                     .ToListAsync();
 
                 if (!tasks.Any())
                     return Results.NotFound("No tasks found for this group");
 
-                db.Tasks.RemoveRange(tasks);
+                db.Task.RemoveRange(tasks);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -305,10 +305,10 @@ namespace App.Api
             // GET - получить статистику задач
             api.MapGet("/stats/group/{groupId}", async (Guid groupId, AppDbContext db) =>
             {
-                var totalTasks = await db.Tasks
+                var totalTasks = await db.Task
                     .CountAsync(t => t.Group_id == groupId);
 
-                var tasksByStatus = await db.Tasks
+                var tasksByStatus = await db.Task
                     .Where(t => t.Group_id == groupId)
                     .GroupBy(t => t.Status)
                     .Select(g => new
@@ -318,7 +318,7 @@ namespace App.Api
                     })
                     .ToListAsync();
 
-                var tasksByPriority = await db.Tasks
+                var tasksByPriority = await db.Task
                     .Where(t => t.Group_id == groupId)
                     .GroupBy(t => t.Priority)
                     .Select(g => new
@@ -328,13 +328,13 @@ namespace App.Api
                     })
                     .ToListAsync();
 
-                var overdueTasks = await db.Tasks
+                var overdueTasks = await db.Task
                     .CountAsync(t => t.Group_id == groupId &&
                                    t.Due_date < DateTime.UtcNow &&
                                    t.Status != "completed" &&
                                    t.Status != "cancelled");
 
-                var topAssignees = await db.Tasks
+                var topAssignees = await db.Task
                     .Where(t => t.Group_id == groupId)
                     .GroupBy(t => t.Assigned_to)
                     .Select(g => new

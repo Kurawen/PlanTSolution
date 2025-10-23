@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="squad-obj">
+        <h2 class="squad-title">Отдел маркетинга</h2>
+        <hr class="hrr">
+        <p class="squad-desc">Официальная группа для команды маркетинга, координирования компаний и отслеживания
+            эффективности. Обсуждение идей и стратегий.
+        </p>
+        <div class="squad-count">
+            <img src="../assets/team.svg" alt="команда" class="team-icon">
+            <p class="squad-count-number">15 участников</p>
+        </div>
+        <div class="squad-buttons">
+            <button class="squad-but">Подробнее</button>
+            <button class="squad-but">Редактировать</button>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+.hrr {
+    color: #DEE1E6FF;
+    height: 1px;
+    border: none;
+    background-color: #DEE1E6FF;
+    width: 100%;
+    margin: 0;
+}
+
+.squad-obj {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    max-width: 100%;
+    width: 340px;
+    background-color: white;
+    gap: 10px;
+}
+
+.squad-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.squad-desc {
+    font-size: 0.85rem;
+    color: black;
+    margin: 0;
+}
+
+.squad-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.squad-but {
+    background-color: white;
+    color: black;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 8px 30px;
+}
+
+.squad-count {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+.squad-count-number {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.team-icon {
+    max-width: 20px;
+    height: auto;
+}
+
+</style>

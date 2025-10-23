@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="problema">
+        <input type="checkbox" class="problem-checkbox">
+        <div class="problem-task">Подготовить квартальный отчет</div>
+        <div class="problem-date">15.09.2025</div>
+        <div class="problem-status">завершено</div>
+        <div class="problem-prior">низкий</div>
+        <div class="problem-creator">Анна Иванова</div>
+        <div class="problem-actions">...</div>
+    </div>
+</body>
+</html>
+
+<style>
+:root {
+    --prior-high: #d9636a;
+    --prior-middle: #f77314;
+    --prior-low: #4385c5;
+
+    --status-process: black;
+    --status-done: #1fc45d;
+    --status-overdue: #d9636a;
+}
+
+.problema {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 1rem;
+    padding: 15px;
+    gap: 30px;
+    border: 1px solid grey;
+    width: max-content;
+}
+
+.problem-checkbox {
+
+}
+
+.problem-task {
+    font-weight: bold;
+
+}
+
+.problem-date {
+    
+}
+
+.problem-status {
+    background-color: var(--status-done);
+    color: white;
+    padding: 8px 12px;
+}
+
+.problem-prior {
+    background-color: var(--prior-low);
+    color: white;
+    padding: 8px 12px;
+}
+
+.problem-creator {
+    
+}
+
+.problem-actions {
+    
+}
+</style>

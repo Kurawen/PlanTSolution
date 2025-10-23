@@ -8,7 +8,7 @@ namespace App.Api
         public static RouteGroupBuilder MapUserPasswordApi(this RouteGroupBuilder api)
         {
             // POST - создать/установить пароль пользователя
-            api.MapPost("/", async (User_password userPassword, AppDbContext db) =>
+            api.MapPost("/", async (UserPasswords userPassword, AppDbContext db) =>
             {
                 // Валидация обязательных полей
                 if (userPassword.User_id == Guid.Empty)
@@ -23,7 +23,7 @@ namespace App.Api
                     return Results.BadRequest("User not found");
 
                 // Проверка, что у пользователя еще нет пароля
-                var existingPassword = await db.User_passwords
+                var existingPassword = await db.UserPasswords
                     .FirstOrDefaultAsync(up => up.User_id == userPassword.User_id);
                 if (existingPassword != null)
                     return Results.BadRequest("User already has a password. Use update instead.");
@@ -33,7 +33,7 @@ namespace App.Api
                     return Results.BadRequest("Password hash seems too short");
 
                 // Создаем запись пароля
-                var newUserPassword = new User_password
+                var newUserPassword = new UserPasswords
                 {
                     Id = Guid.NewGuid(),
                     User_id = userPassword.User_id,
@@ -42,7 +42,7 @@ namespace App.Api
                     Updated_at = null
                 };
 
-                db.User_passwords.Add(newUserPassword);
+                db.UserPasswords.Add(newUserPassword);
                 await db.SaveChangesAsync();
 
                 // Не возвращаем хеш пароля в ответе
@@ -59,7 +59,7 @@ namespace App.Api
             // GET - получить все записи паролей (только для админов)
             api.MapGet("/", async (AppDbContext db) =>
             {
-                var passwords = await db.User_passwords
+                var passwords = await db.UserPasswords
                     .Select(up => new
                     {
                         up.Id,
@@ -74,7 +74,7 @@ namespace App.Api
             // GET - получить запись пароля по ID (без хеша)
             api.MapGet("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords
+                var userPassword = await db.UserPasswords
                     .Where(up => up.Id == id)
                     .Select(up => new
                     {
@@ -91,7 +91,7 @@ namespace App.Api
             // GET - получить запись пароля пользователя (без хеша)
             api.MapGet("/user/{userId}", async (Guid userId, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords
+                var userPassword = await db.UserPasswords
                     .Where(up => up.User_id == userId)
                     .Select(up => new
                     {
@@ -114,7 +114,7 @@ namespace App.Api
                 if (string.IsNullOrEmpty(request.Password_hash))
                     return Results.BadRequest("Password hash is required");
 
-                var userPassword = await db.User_passwords
+                var userPassword = await db.UserPasswords
                     .FirstOrDefaultAsync(up => up.User_id == request.User_id);
 
                 if (userPassword is null)
@@ -128,9 +128,9 @@ namespace App.Api
             });
 
             // PUT - обновить пароль пользователя
-            api.MapPut("/{id}", async (Guid id, User_password passwordData, AppDbContext db) =>
+            api.MapPut("/{id}", async (Guid id, UserPasswords passwordData, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords.FindAsync(id);
+                var userPassword = await db.UserPasswords.FindAsync(id);
                 if (userPassword is null) return Results.NotFound();
 
                 // Валидация нового пароля
@@ -165,7 +165,7 @@ namespace App.Api
             // PATCH - обновить пароль по User_id
             api.MapPatch("/user/{userId}", async (Guid userId, string newPasswordHash, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords
+                var userPassword = await db.UserPasswords
                     .FirstOrDefaultAsync(up => up.User_id == userId);
 
                 if (userPassword is null)
@@ -196,10 +196,10 @@ namespace App.Api
             // DELETE - удалить пароль по ID
             api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords.FindAsync(id);
+                var userPassword = await db.UserPasswords.FindAsync(id);
                 if (userPassword is null) return Results.NotFound();
 
-                db.User_passwords.Remove(userPassword);
+                db.UserPasswords.Remove(userPassword);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -207,12 +207,12 @@ namespace App.Api
             // DELETE - удалить пароль пользователя
             api.MapDelete("/user/{userId}", async (Guid userId, AppDbContext db) =>
             {
-                var userPassword = await db.User_passwords
+                var userPassword = await db.UserPasswords
                     .FirstOrDefaultAsync(up => up.User_id == userId);
 
                 if (userPassword is null) return Results.NotFound();
 
-                db.User_passwords.Remove(userPassword);
+                db.UserPasswords.Remove(userPassword);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -220,7 +220,7 @@ namespace App.Api
             // GET - проверить существование пароля пользователя
             api.MapGet("/user/{userId}/exists", async (Guid userId, AppDbContext db) =>
             {
-                var hasPassword = await db.User_passwords
+                var hasPassword = await db.UserPasswords
                     .AnyAsync(up => up.User_id == userId);
 
                 return Results.Ok(new { HasPassword = hasPassword });
@@ -229,7 +229,7 @@ namespace App.Api
             // GET - получить историю изменений пароля (если нужно)
             api.MapGet("/user/{userId}/history", async (Guid userId, AppDbContext db) =>
             {
-                var passwordHistory = await db.User_passwords
+                var passwordHistory = await db.UserPasswords
                     .Where(up => up.User_id == userId)
                     .Select(up => new
                     {

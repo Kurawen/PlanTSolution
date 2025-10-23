@@ -25,6 +25,7 @@ export default {
                 <p class="dev-title">В разработке</p>
                 <img src="../assets/plant-logo.svg" alt="растение в горшке" class="plant-dev">
             </div>
+            <hr id="hr">
             <div class="close-button">
                 <button class="dev-but" @click="CloseModalWindow">Закрыть</button>
             </div>
@@ -55,7 +56,6 @@ export default {
     flex-direction: column;
     background-color: white;
     border-radius: 5px;
-    /* padding: 10px 0; */
 }
 
 .in-dev {
@@ -65,6 +65,7 @@ export default {
     gap: 15px;
     display: flex;
     flex-direction: column;
+    padding-bottom: 15px;
 }
 
 .dev-but {
@@ -99,7 +100,7 @@ export default {
     cursor: pointer;
     font-size: 1.5rem;
     margin: 0;
-    padding-right: 10px;
+    padding: 15px 15px 0 ;
 }
 
 .close-button {
@@ -108,9 +109,15 @@ export default {
     justify-content: end;
     flex-direction: row;
     width: 100%;
-    border-top: 1px solid #DEE1E6FF;
-    padding: 10px;
-    margin-top: 25px;
+    padding: 15px;
+}
+
+#hr {
+    color: #DEE1E6FF;
+    height: 1px;
+    border: none;
+    background-color: #DEE1E6FF;
+    width: 100%;
 }
 
 </style>

@@ -8,7 +8,7 @@ namespace App.Api
         public static RouteGroupBuilder MapGroupMemberApi(this RouteGroupBuilder api)
         {
             // POST - добавить участника в группу
-            api.MapPost("/", async (Group_member member, AppDbContext db) =>
+            api.MapPost("/", async (GroupMembers member, AppDbContext db) =>
             {
                 // Валидация обязательных полей
                 if (member.Group_id == Guid.Empty)
@@ -31,7 +31,7 @@ namespace App.Api
                     return Results.BadRequest("User not found");
 
                 // Проверка, что пользователь уже не состоит в группе
-                var existingMember = await db.Group_members
+                var existingMember = await db.GroupMembers
                     .FirstOrDefaultAsync(m => m.Group_id == member.Group_id && m.User_id == member.User_id);
                 if (existingMember != null)
                     return Results.BadRequest("User is already a member of this group");
@@ -42,7 +42,7 @@ namespace App.Api
                     return Results.BadRequest("Invalid role. Must be: member, admin, or owner");
 
                 // Создаем нового участника
-                var newMember = new Group_member
+                var newMember = new GroupMembers
                 {
                     Id = Guid.NewGuid(),
                     Group_id = member.Group_id,
@@ -51,18 +51,18 @@ namespace App.Api
                     Joined_at = DateTime.UtcNow
                 };
 
-                db.Group_members.Add(newMember);
+                db.GroupMembers.Add(newMember);
                 await db.SaveChangesAsync();
                 return Results.Created($"/groupmembers/{newMember.Id}", newMember);
             });
 
             // GET - получить всех участников групп
-            api.MapGet("/", async (AppDbContext db) => await db.Group_members.ToListAsync());
+            api.MapGet("/", async (AppDbContext db) => await db.GroupMembers.ToListAsync());
 
             // GET - получить участников конкретной группы
             api.MapGet("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
             {
-                var members = await db.Group_members
+                var members = await db.GroupMembers
                     .Where(m => m.Group_id == groupId)
                     .ToListAsync();
                 return Results.Ok(members);
@@ -71,7 +71,7 @@ namespace App.Api
             // GET - получить группы пользователя
             api.MapGet("/user/{userId}", async (Guid userId, AppDbContext db) =>
             {
-                var memberships = await db.Group_members
+                var memberships = await db.GroupMembers
                     .Where(m => m.User_id == userId)
                     .ToListAsync();
                 return Results.Ok(memberships);
@@ -80,14 +80,14 @@ namespace App.Api
             // GET - получить одного участника по ID
             api.MapGet("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var member = await db.Group_members.FindAsync(id);
+                var member = await db.GroupMembers.FindAsync(id);
                 return member is null ? Results.NotFound() : Results.Ok(member);
             });
 
             // GET - получить конкретного участника группы
             api.MapGet("/group/{groupId}/user/{userId}", async (Guid groupId, Guid userId, AppDbContext db) =>
             {
-                var member = await db.Group_members
+                var member = await db.GroupMembers
                     .FirstOrDefaultAsync(m => m.Group_id == groupId && m.User_id == userId);
                 return member is null ? Results.NotFound() : Results.Ok(member);
             });
@@ -95,16 +95,16 @@ namespace App.Api
             // GET - получить администраторов группы
             api.MapGet("/group/{groupId}/admins", async (Guid groupId, AppDbContext db) =>
             {
-                var admins = await db.Group_members
+                var admins = await db.GroupMembers
                     .Where(m => m.Group_id == groupId && (m.Role == "admin" || m.Role == "owner"))
                     .ToListAsync();
                 return Results.Ok(admins);
             });
 
             // PUT - обновить роль участника
-            api.MapPut("/{id}", async (Guid id, Group_member memberData, AppDbContext db) =>
+            api.MapPut("/{id}", async (Guid id, GroupMembers memberData, AppDbContext db) =>
             {
-                var member = await db.Group_members.FindAsync(id);
+                var member = await db.GroupMembers.FindAsync(id);
                 if (member is null) return Results.NotFound();
 
                 // Валидация роли
@@ -122,7 +122,7 @@ namespace App.Api
             // PATCH - изменить роль участника
             api.MapPatch("/{id}/role", async (Guid id, string role, AppDbContext db) =>
             {
-                var member = await db.Group_members.FindAsync(id);
+                var member = await db.GroupMembers.FindAsync(id);
                 if (member is null) return Results.NotFound();
 
                 // Валидация роли
@@ -138,10 +138,10 @@ namespace App.Api
             // DELETE - удалить участника из группы
             api.MapDelete("/{id}", async (Guid id, AppDbContext db) =>
             {
-                var member = await db.Group_members.FindAsync(id);
+                var member = await db.GroupMembers.FindAsync(id);
                 if (member is null) return Results.NotFound();
 
-                db.Group_members.Remove(member);
+                db.GroupMembers.Remove(member);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -149,12 +149,12 @@ namespace App.Api
             // DELETE - удалить пользователя из группы
             api.MapDelete("/group/{groupId}/user/{userId}", async (Guid groupId, Guid userId, AppDbContext db) =>
             {
-                var member = await db.Group_members
+                var member = await db.GroupMembers
                     .FirstOrDefaultAsync(m => m.Group_id == groupId && m.User_id == userId);
 
                 if (member is null) return Results.NotFound();
 
-                db.Group_members.Remove(member);
+                db.GroupMembers.Remove(member);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });
@@ -162,14 +162,14 @@ namespace App.Api
             // DELETE - удалить всех участников группы
             api.MapDelete("/group/{groupId}", async (Guid groupId, AppDbContext db) =>
             {
-                var members = await db.Group_members
+                var members = await db.GroupMembers
                     .Where(m => m.Group_id == groupId)
                     .ToListAsync();
 
                 if (!members.Any())
                     return Results.NotFound("No members found in this group");
 
-                db.Group_members.RemoveRange(members);
+                db.GroupMembers.RemoveRange(members);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             });

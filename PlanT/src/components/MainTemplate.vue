@@ -1,4 +1,10 @@
 <script setup>
+import { useRouter } from 'vue-router';
+
+const goSquads = () => {
+    router.push('/squads')
+}
+
 const props = defineProps({
 hideHeader: {
     type: Boolean,
@@ -22,7 +28,10 @@ const emit = defineEmits(['open-auth'])
                     <img src="../assets/plant-logo.svg" alt="растение" class="plant-dev">
                     <a href="#" class="nav-logo">PlanT</a>
                 </div>
-                <a href="#" class="nav-link">Главная</a>
+                
+                <a href="#" @click.prevent="goSquads" class="nav-link">Главная</a>
+                <!-- <a href="../views/Squads.vue">Группы</a> -->
+                <router-link to="/squads" class="nav-link">Группы</router-link> 
                 <div class="notif-account">
                     <img src="../assets/notification.svg" alt="телеграм" id="main-icon" @click="emit()">
                     <button class="login-btn" @click="emit('open-auth', 'login')">Войти в аккаунт</button>
@@ -46,9 +55,9 @@ const emit = defineEmits(['open-auth'])
     </div>
 </template>
 
-<style>
+<style scoped>
 * {
-    border: 1px solid red;
+    /* border: 1px solid red;  */
 }
 
 .plant-dev {
@@ -103,10 +112,9 @@ const emit = defineEmits(['open-auth'])
 
 .notif-account {
     display: flex;
-    flex-direction: row;
-    gap: 20px;
+    gap: 30px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 #notif-icon {
@@ -118,11 +126,12 @@ const emit = defineEmits(['open-auth'])
     background-color: white;
     border: 1px solid black;
     border-radius: 5px;
-    padding: 0.75rem 4rem;
+    padding: 0.75rem 1.5rem;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s;
+    min-width: fit-content;
 }
 
 .login-btn:hover {

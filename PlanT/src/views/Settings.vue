@@ -20,38 +20,7 @@
             </section>
 
 
-            <!-- ключевые особенности -->
-            <section class="keys">
-                <h2 class="keys-title">Ключевые особенности</h2>
-                <div class="keys-grid">
-                    <div class="keys-card">
-                        <div class="keys-name">
-                            <img src="./assets/list-todo.svg" alt="растение в горшке" class="keys-icon">
-                            <h3>Управление задачами</h3>
-                        </div>
-                        <p class="keys-desc">Управляйте задачами и достигайте высот.</p>
-                        <button class="keys-btn" @click="openModal">Перейти к задачам</button>
-                    </div>
-
-                    <div class="keys-card">
-                        <div class="keys-name">
-                            <img src="./assets/team.svg" alt="растение в горшке" class="keys-icon">
-                            <h3>Работа в команде</h3>
-                        </div>
-                        <p class="keys-desc">Создавайте группы. Создавайте контент.</p>
-                        <button class="keys-btn" @click="openModal">Перейти к группам</button>
-                    </div>
-
-                    <div class="keys-card">
-                        <div class="keys-name">
-                            <img src="./assets/message.svg" alt="растение в горшке" class="keys-icon">
-                            <h3>Коммуникация</h3>
-                        </div>
-                        <p class="keys-desc">Взаимодействуйте с вашей командой.</p>
-                        <button class="keys-btn" @click="openModal">Перейти к сообщениям</button>
-                    </div>
-                </div>
-            </section>
+    
 
 
             <!-- готовы улучшить свою продуктивность? -->
