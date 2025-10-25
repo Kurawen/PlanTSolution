@@ -8,7 +8,7 @@ namespace App.Api
         public static RouteGroupBuilder MapUserProfileApi(this RouteGroupBuilder api)
         {
             // POST - создать профиль пользователя
-            api.MapPost("/", async (UserProfile profile, AppDbContext db) =>
+            api.MapPost("/", async (User_profile profile, AppDbContext db) =>
             {
                 // Валидация обязательных полей
                 if (profile.User_id == Guid.Empty)
@@ -35,7 +35,7 @@ namespace App.Api
                 }
 
                 // Создаем новый профиль
-                var newProfile = new UserProfiles
+                var newProfile = new User_profile
                 {
                     Id = Guid.NewGuid(),
                     User_id = profile.User_id,
@@ -113,7 +113,7 @@ namespace App.Api
             });
 
             // PUT - обновить профиль пользователя
-            api.MapPut("/{id}", async (Guid id, UserProfiles profileData, AppDbContext db) =>
+            api.MapPut("/{id}", async (Guid id, User_profile profileData, AppDbContext db) =>
             {
                 var profile = await db.UserProfiles.FindAsync(id);
                 if (profile is null) return Results.NotFound();

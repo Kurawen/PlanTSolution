@@ -14,7 +14,7 @@ namespace Entities
     {
         public DbSet<User> Users { get; set; }
         public DbSet<User_profile> UserProfiles { get; set; }
-        public DbSet<Task> Task { get; set; }
+        public DbSet<Problem> Problem { get; set; }
         public DbSet<User_password> UserPasswords { get; set; }
         // public DbSet<Task_comment> TaskComments { get; set; }
         public DbSet<Notification> Notifications { get; set; }

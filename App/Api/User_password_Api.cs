@@ -8,7 +8,7 @@ namespace App.Api
         public static RouteGroupBuilder MapUserPasswordApi(this RouteGroupBuilder api)
         {
             // POST - создать/установить пароль пользователя
-            api.MapPost("/", async (UserPasswords userPassword, AppDbContext db) =>
+            api.MapPost("/", async (User_password userPassword, AppDbContext db) =>
             {
                 // Валидация обязательных полей
                 if (userPassword.User_id == Guid.Empty)
@@ -33,7 +33,7 @@ namespace App.Api
                     return Results.BadRequest("Password hash seems too short");
 
                 // Создаем запись пароля
-                var newUserPassword = new UserPasswords
+                var newUserPassword = new User_password
                 {
                     Id = Guid.NewGuid(),
                     User_id = userPassword.User_id,
@@ -128,7 +128,7 @@ namespace App.Api
             });
 
             // PUT - обновить пароль пользователя
-            api.MapPut("/{id}", async (Guid id, UserPasswords passwordData, AppDbContext db) =>
+            api.MapPut("/{id}", async (Guid id, User_password passwordData, AppDbContext db) =>
             {
                 var userPassword = await db.UserPasswords.FindAsync(id);
                 if (userPassword is null) return Results.NotFound();

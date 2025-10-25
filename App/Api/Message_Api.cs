@@ -32,7 +32,7 @@ namespace App.Api
 
                 // Проверка, что пользователь состоит в группе канала
                 var channel = await db.Channels.FindAsync(message.Channel_id);
-                var isGroupMember = await db.Group_members
+                var isGroupMember = await db.GroupMembers
                     .AnyAsync(m => m.User_id == message.User_id && m.Group_id == channel.Group_id);
 
                 if (!isGroupMember)

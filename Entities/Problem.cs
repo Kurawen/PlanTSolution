@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Entities
 {
-    public class Task
+    public class Problem
     {
         public Guid Id { get; set; }
 

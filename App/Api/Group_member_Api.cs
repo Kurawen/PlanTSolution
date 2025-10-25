@@ -8,7 +8,7 @@ namespace App.Api
         public static RouteGroupBuilder MapGroupMemberApi(this RouteGroupBuilder api)
         {
             // POST - добавить участника в группу
-            api.MapPost("/", async (GroupMembers member, AppDbContext db) =>
+            api.MapPost("/", async (Group_member member, AppDbContext db) =>
             {
                 // Валидация обязательных полей
                 if (member.Group_id == Guid.Empty)
@@ -42,7 +42,7 @@ namespace App.Api
                     return Results.BadRequest("Invalid role. Must be: member, admin, or owner");
 
                 // Создаем нового участника
-                var newMember = new GroupMembers
+                var newMember = new Group_member
                 {
                     Id = Guid.NewGuid(),
                     Group_id = member.Group_id,
@@ -102,7 +102,7 @@ namespace App.Api
             });
 
             // PUT - обновить роль участника
-            api.MapPut("/{id}", async (Guid id, GroupMembers memberData, AppDbContext db) =>
+            api.MapPut("/{id}", async (Guid id, Group_member memberData, AppDbContext db) =>
             {
                 var member = await db.GroupMembers.FindAsync(id);
                 if (member is null) return Results.NotFound();

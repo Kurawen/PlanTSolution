@@ -22,6 +22,8 @@
     font-size: 1rem;
     padding: 15px;
     gap: 30px;
+    border: 1px solid grey;
+    width: max-content;
 }
 
 .problem-task {
@@ -36,12 +38,13 @@
 .problem-status {
     background-color: black;
     color: white;
-
+        padding: 8px 12px;
 }
 
 .problem-prior {
     background-color: red;
     color: white;
+    padding: 8px 12px;
 }
 
 .problem-creator {

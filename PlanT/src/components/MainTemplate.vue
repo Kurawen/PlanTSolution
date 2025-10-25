@@ -1,10 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
-const goSquads = () => {
-    router.push('/squads')
-}
-
 const props = defineProps({
 hideHeader: {
     type: Boolean,
@@ -26,14 +22,16 @@ const emit = defineEmits(['open-auth'])
             <nav class="navbar">
                 <div class="nav-title">
                     <img src="../assets/plant-logo.svg" alt="растение" class="plant-dev">
-                    <a href="#" class="nav-logo">PlanT</a>
+                    <p class="nav-logo">PlanT</p>
                 </div>
-                
-                <a href="#" @click.prevent="goSquads" class="nav-link">Главная</a>
-                <!-- <a href="../views/Squads.vue">Группы</a> -->
-                <router-link to="/squads" class="nav-link">Группы</router-link> 
+                <div class="nav-links">
+                    <router-link to="/" class="nav-link">Главная</router-link>
+                    <router-link to="/problems" class="nav-link">Задачи</router-link> 
+                    <router-link to="/squads" class="nav-link">Группы</router-link> 
+                    <router-link to="/messages" class="nav-link">Сообщения</router-link> 
+                </div>
                 <div class="notif-account">
-                    <img src="../assets/notification.svg" alt="телеграм" id="main-icon" @click="emit()">
+                    <img src="../assets/notification.svg" alt="уведомления" id="main-icon" @click="emit()">
                     <button class="login-btn" @click="emit('open-auth', 'login')">Войти в аккаунт</button>
                 </div>
             </nav>
@@ -56,10 +54,6 @@ const emit = defineEmits(['open-auth'])
 </template>
 
 <style scoped>
-* {
-    /* border: 1px solid red;  */
-}
-
 .plant-dev {
     max-width: 50px;
     height: auto;
@@ -77,6 +71,7 @@ const emit = defineEmits(['open-auth'])
     position: sticky;
     top: 0;
     z-index: 100;
+    margin-bottom: 2rem;
 }
 
 .navbar {
@@ -85,7 +80,6 @@ const emit = defineEmits(['open-auth'])
     align-items: center;
     padding: 1rem 2rem;
     margin: 0 auto;
-    font-size: 1.4rem;
     background-color: white;
 }
 
@@ -101,6 +95,14 @@ const emit = defineEmits(['open-auth'])
     font-family: var(--text-header);
     text-decoration: none;
     color: black;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    font-size: 1.2rem;
 }
 
 .nav-link {
@@ -154,7 +156,7 @@ const emit = defineEmits(['open-auth'])
     font-size: 1.2rem;
     padding: 1rem 2rem;
     background-color: white;
-    border-top: 1px solid gray;
+    border-top: 1px solid var(--border-color);
 }
 
 #main-icon {

@@ -17,8 +17,8 @@ namespace App.Api
                 if (notification.Message_id == Guid.Empty)
                     return Results.BadRequest("Message ID is required");
 
-                if (notification.Task_id == Guid.Empty)
-                    return Results.BadRequest("Task ID is required");
+                if (notification.Problem_id == Guid.Empty)
+                    return Results.BadRequest("Problem ID is required");
 
                 if (string.IsNullOrEmpty(notification.Type))
                     return Results.BadRequest("Notification type is required");
@@ -34,12 +34,12 @@ namespace App.Api
                     return Results.BadRequest("Message not found");
 
                 // Проверка существования задачи
-                var taskExists = await db.Tasks.AnyAsync(t => t.Id == notification.Task_id);
+                var taskExists = await db.Problem.AnyAsync(t => t.Id == notification.Problem_id);
                 if (!taskExists)
-                    return Results.BadRequest("Task not found");
+                    return Results.BadRequest("Problem not found");
 
                 // Валидация типа уведомления
-                var validTypes = new[] { "message", "task_assigned", "task_completed", "task_updated", "mention", "system" };
+                var validTypes = new[] { "message", "problem_assigned", "problem_completed", "problem_updated", "mention", "system" };
                 if (!validTypes.Contains(notification.Type.ToLower()))
                     return Results.BadRequest("Invalid notification type");
 
@@ -49,7 +49,7 @@ namespace App.Api
                     Id = Guid.NewGuid(),
                     User_id = notification.User_id,
                     Message_id = notification.Message_id,
-                    Task_id = notification.Task_id,
+                    Problem_id = notification.Problem_id,
                     Type = notification.Type.ToLower(),
                     Content = notification.Content,
                     Is_read = false,
@@ -107,7 +107,7 @@ namespace App.Api
                 var notificationsWithDetails = await (
                     from notification in db.Notifications
                     join message in db.Messages on notification.Message_id equals message.Id
-                    join task in db.Tasks on notification.Task_id equals task.Id
+                    join problem in db.Problem on notification.Problem_id equals problem.Id
                     join user in db.Users on message.User_id equals user.Id
                     where notification.User_id == userId
                     orderby notification.Created_at descending
@@ -115,7 +115,7 @@ namespace App.Api
                     {
                         Notification = notification,
                         MessageContent = message.Content,
-                        TaskTitle = task.Title,
+                        TaskTitle = problem.Title,
                         SenderName = user.First_Name + " " + user.Last_Name,
                         SenderEmail = user.Email
                     }
@@ -143,7 +143,7 @@ namespace App.Api
                 // Валидация типа уведомления (если изменен)
                 if (notification.Type != notificationData.Type)
                 {
-                    var validTypes = new[] { "message", "task_assigned", "task_completed", "task_updated", "mention", "system" };
+                    var validTypes = new[] { "message", "problem_assigned", "problem_completed", "problem_updated", "mention", "system" };
                     if (!validTypes.Contains(notificationData.Type.ToLower()))
                         return Results.BadRequest("Invalid notification type");
 

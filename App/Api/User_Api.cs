@@ -187,12 +187,12 @@ namespace App.Api
                 if (user is null) return Results.NotFound();
 
                 // Проверяем связанные данные перед удалением
-                var hasProfile = await db.User_profiles.AnyAsync(p => p.User_id == id);
+                var hasProfile = await db.UserProfiles.AnyAsync(p => p.User_id == id);
                 var hasMessages = await db.Messages.AnyAsync(m => m.User_id == id);
-                var hasGroupMemberships = await db.Group_members.AnyAsync(gm => gm.User_id == id);
-                var hasTasksCreated = await db.Tasks.AnyAsync(t => t.Created_by == id);
-                var hasTasksAssigned = await db.Tasks.AnyAsync(t => t.Assigned_to == id);
-                var hasPassword = await db.User_passwords.AnyAsync(up => up.User_id == id);
+                var hasGroupMemberships = await db.GroupMembers.AnyAsync(gm => gm.User_id == id);
+                var hasTasksCreated = await db.Problem.AnyAsync(t => t.Created_by == id);
+                var hasTasksAssigned = await db.Problem.AnyAsync(t => t.Assigned_to == id);
+                var hasPassword = await db.UserPasswords.AnyAsync(up => up.User_id == id);
 
                 if (hasProfile || hasMessages || hasGroupMemberships || hasTasksCreated || hasTasksAssigned || hasPassword)
                 {
@@ -214,12 +214,12 @@ namespace App.Api
 
                 // Проверяем, есть ли пользователи с связанными данными
                 var usersWithRelations = await db.Users
-                    .Where(u => db.User_profiles.Any(p => p.User_id == u.Id) ||
+                    .Where(u => db.UserProfiles.Any(p => p.User_id == u.Id) ||
                                db.Messages.Any(m => m.User_id == u.Id) ||
-                               db.Group_members.Any(gm => gm.User_id == u.Id) ||
-                               db.Tasks.Any(t => t.Created_by == u.Id) ||
-                               db.Tasks.Any(t => t.Assigned_to == u.Id) ||
-                               db.User_passwords.Any(up => up.User_id == u.Id))
+                               db.GroupMembers.Any(gm => gm.User_id == u.Id) ||
+                               db.Problem.Any(t => t.Created_by == u.Id) ||
+                               db.Problem.Any(t => t.Assigned_to == u.Id) ||
+                               db.UserPasswords.Any(up => up.User_id == u.Id))
                     .ToListAsync();
 
                 if (usersWithRelations.Any())

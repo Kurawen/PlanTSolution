@@ -14,7 +14,7 @@ namespace Entities
         public Guid Message_id { get; set; }
 
         [Required]
-        public Guid Task_id { get; set; }
+        public Guid Problem_id { get; set; }
 
         [Required]
         [MaxLength(20)]
