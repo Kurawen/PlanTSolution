@@ -6,21 +6,21 @@ const chats = ref([
   {
     id: 1,
     name: "Проектный отдел 'А'",
-    lastMessage: "Осталось разобрать rc",
+    lastMessage: "Осталось разобрать дабуди дабудай",
     time: "10:30",
     unread: true
   },
   {
     id: 2,
     name: "Сара",
-    lastMessage: "Отличная работа! Мож",
+    lastMessage: "Отличная работа! Можно еще позязя",
     time: "5:06",
     unread: false
   },
   {
     id: 3,
     name: "Скамеры",
-    lastMessage: "ХОЧЕШЬ СТАТЬ МИЛЛИОР",
+    lastMessage: "ХОЧЕШЬ СТАТЬ МИЛЛИОНЕРОМ?",
     time: "Вчера",
     unread: true
   },
@@ -159,14 +159,11 @@ const sendMessage = () => {
 .chats-container {
     display: flex;
     justify-content: center;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    padding: 20px;
 }
 
 .messages {
     border: 1px solid #e0e0e0;
-    border-radius: 12px;
+    border-radius: 5px;
     display: flex;
     width: 100%;
     max-width: 1200px;
@@ -185,6 +182,8 @@ const sendMessage = () => {
 }
 
 .chats-list h2 {
+    font-family: var(--text-header);
+    font-weight: 800;
     padding: 1.5rem;
     margin: 0;
     border-bottom: 1px solid #e0e0e0;
@@ -218,9 +217,8 @@ const sendMessage = () => {
     left: 2rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    background: #999;
+    width: 24px;
+    height: auto;
 }
 
 .chats {
@@ -321,9 +319,9 @@ const sendMessage = () => {
 
 .messages-container {
     flex: 1;
-    padding: 1.5rem;
+    padding: 1rem;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: var(--bg-color);
 }
 
 .message {
@@ -386,7 +384,7 @@ const sendMessage = () => {
 
 .send-button {
     padding: 0.75rem 1.5rem;
-    background: #007bff;
+    background: #28a8e9;
     color: white;
     border: none;
     border-radius: 20px;
@@ -399,20 +397,4 @@ const sendMessage = () => {
     background: #0056b3;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .messages {
-        flex-direction: column;
-        height: 90vh;
-    }
-    
-    .chats-list {
-        width: 100%;
-        height: 40%;
-    }
-    
-    .cur-chat {
-        height: 60%;
-    }
-}
 </style>

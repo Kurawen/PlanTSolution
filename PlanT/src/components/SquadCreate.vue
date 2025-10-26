@@ -1,94 +1,3 @@
-<template>
-    <div class="modal-overlay" @click.self="$emit('close')">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1>Управление группами</h1>
-            <p>Создайте новую группу или пригласите пользователей в существующую.</p>
-        </div>
-
-        <div class="tabs">
-            <button 
-            class="tab-button" 
-            :class="{ active: activeTab === 'create' }"
-            @click="activeTab = 'create'"
-            >
-            Создать группу
-            </button>
-            <button 
-            class="tab-button" 
-            :class="{ active: activeTab === 'invite' }"
-            @click="activeTab = 'invite'"
-            >
-            Пригласить пользователей
-            </button>
-        </div>
-
-        <div v-if="activeTab === 'create'" class="create-group-form">
-            <div class="form-group">
-            <label for="groupName" class="form-label">Название группы</label>
-            <input
-                id="groupName"
-                v-model="groupName"
-                type="text"
-                class="form-input"
-                placeholder="Отдел проектирования"
-            />
-            </div>
-
-            <div class="form-group">
-            <label for="groupDescription" class="form-label">Описание</label>
-            <textarea
-                id="groupDescription"
-                v-model="groupDescription"
-                class="form-textarea"
-                placeholder="Краткое описание группы"
-                rows="3"
-            ></textarea>
-            </div>
-
-            <div class="form-actions">
-            <button class="cancel-button" @click="$emit('close')">Отмена</button>
-            <button class="create-button" @click="createGroup">Создать</button>
-            </div>
-        </div>
-
-        <div v-if="activeTab === 'invite'" class="invite-form">
-            <div class="form-group">
-            <label class="form-label">Группа</label>
-            <select v-model="selectedGroup" class="form-select">
-                <option value="">Выберите группу</option>
-                <option 
-                v-for="group in availableGroups" 
-                :key="group.id" 
-                :value="group.id"
-                >
-                {{ group.name }}
-                </option>
-            </select>
-            </div>
-
-            <div class="form-group">
-            <label class="form-label">Ссылка</label>
-            <div class="link-container">
-                <input
-                :value="inviteLink"
-                type="text"
-                class="form-input link-input"
-                readonly
-                />
-                <button class="copy-button" @click="copyLink">Скопировать</button>
-            </div>
-            </div>
-
-            <div class="form-actions">
-            <button class="cancel-button" @click="$emit('close')">Отмена</button>
-            <button class="copy-main-button" @click="copyLink">Скопировать</button>
-            </div>
-        </div>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref, computed } from 'vue'
 
@@ -146,6 +55,96 @@ const copyLink = async () => {
     }
 }
 </script>
+
+<template>
+    <div class="modal-overlay" @click.self="$emit('close')">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1>Управление группами</h1>
+            <p>Создайте новую группу или пригласите пользователей в существующую.</p>
+        </div>
+
+        <div class="tabs">
+            <button 
+            class="tab-button" 
+            :class="{ active: activeTab === 'create' }"
+            @click="activeTab = 'create'"
+            >
+            Создать группу
+            </button>
+            <button 
+            class="tab-button" 
+            :class="{ active: activeTab === 'invite' }"
+            @click="activeTab = 'invite'"
+            >
+            Пригласить пользователей
+            </button>
+        </div>
+
+        <div v-if="activeTab === 'create'" class="create-group-form">
+            <div class="form-group">
+                <label for="groupName" class="form-label">Название группы</label>
+                <input
+                    id="groupName"
+                    v-model="groupName"
+                    type="text"
+                    class="form-input"
+                    placeholder="Отдел проектирования"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="groupDescription" class="form-label">Описание</label>
+                <textarea
+                    id="groupDescription"
+                    v-model="groupDescription"
+                    class="form-textarea"
+                    placeholder="Краткое описание группы"
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button class="cancel-button" @click="$emit('close')">Отмена</button>
+                <button class="create-button" @click="createGroup">Создать</button>
+            </div>
+        </div>
+
+        <div v-if="activeTab === 'invite'" class="invite-form">
+            <div class="form-group">
+            <label class="form-label">Группа</label>
+            <select v-model="selectedGroup" class="form-select">
+                <option value="">Выберите группу</option>
+                <option 
+                v-for="group in availableGroups" 
+                :key="group.id" 
+                :value="group.id"
+                >
+                {{ group.name }}
+                </option>
+            </select>
+            </div>
+
+            <div class="form-group">
+            <label class="form-label">Ссылка</label>
+            <div class="link-container">
+                <input
+                :value="inviteLink"
+                type="text"
+                class="form-input link-input"
+                readonly
+                />
+            </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="cancel-button" @click="$emit('close')">Отмена</button>
+                <button class="copy-main-button" @click="copyLink">Скопировать</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .modal-overlay {

@@ -4,11 +4,70 @@ import { RouterView } from 'vue-router'
 import MainTemplate from './components/MainTemplate.vue'
 import DevelopingModalWindow from './components/DevelopingModalWindow.vue'
 import Auth from './components/Authentication.vue'
+import Notifications from './components/Notifications.vue';
 
 
 const showModal = ref(false)
 const showAuth = ref(false)
 const authMode = ref('login')
+
+const notificationsData = ref({
+    chatNotifications: [
+        {
+            id: 1,
+            title: 'Команда маркетинга',
+            message: 'Отчет за Q3 готов к проверке.',
+            time: '10 минут назад',
+            avatar: ''
+        },
+        {
+            id: 2,
+            title: 'Проект Alpha',
+            message: 'Обновление статуса: Встреча в 15.00.',
+            time: '2 часа назад',
+            avatar: ''
+        },
+        {
+            id: 3,
+            title: 'Отдел продаж',
+            message: 'Новый клиент: Свяжитесь с Эмили Браун.',
+            time: 'Вчера',
+            avatar: ''
+        }
+    ],
+    taskNotifications: [
+        {
+            id: 1,
+            title: 'Разработать фичу авторизации',
+            status: 'Приближается срок',
+            assignee: 'Анна Смирнова',
+            priority: 'high',
+            dueDate: '2024-07-30'
+        },
+        {
+            id: 2,
+            title: 'Обзор дизайна домашней страницы',
+            assignee: 'Дмитрий Иванов',
+            dueDate: '30.07.2024',
+            priority: 'medium'
+        },
+        {
+            id: 3,
+            title: 'Исправить ошибку #BUG-456',
+            assignee: 'Сергей Петров',
+            dueDate: '15.07.2024',
+            priority: 'high'
+        },
+        {
+            id: 4,
+            title: 'Подготовить презентацию для клиентов',
+            assignee: 'Елена Кузнецова',
+            dueDate: '28.07.2024',
+            status: 'Продолжается срок',
+            priority: 'medium'
+        }
+    ]
+})
 
 const openModal = () => {
     showModal.value = true
@@ -47,9 +106,7 @@ const handleGuestLogin = () => {
 </script>
 
 <template>
-    <MainTemplate @open-auth="openAuth"
-                  @open-notifications="openModal"
-    >
+    <MainTemplate @open-auth="openAuth" @open-notifications="openModal">
         
         <RouterView/>
 
@@ -71,7 +128,15 @@ const handleGuestLogin = () => {
         </div>
 
         <!-- модальное окно в разработке -->
-        <DevelopingModalWindow v-if="showModal" @close="closeModal"/>
+        <!-- <DevelopingModalWindow v-if="showModal" @close="closeModal"/> -->
+
+        <!-- модальное окно уведомлений -->
+        <Notifications 
+            v-if="showModal" 
+            :chatNotifications="notificationsData.chatNotifications"
+            :taskNotifications="notificationsData.taskNotifications"
+            @close="closeModal"
+        />
         
     </MainTemplate>
 </template>

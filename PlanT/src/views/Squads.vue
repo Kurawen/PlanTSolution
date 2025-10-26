@@ -4,8 +4,10 @@ import DevelopingModalWindow from '@/components/DevelopingModalWindow.vue'
 import ProblemLine from '@/components/ProblemLine.vue'
 import SquadObj from '@/components/SquadObj.vue'
 import SquadCreate from '@/components/SquadCreate.vue'
+import SquadOtdel from '@/components/SquadOtdel.vue'
 
 const showGroupModal = ref(false)
+
 
 const openGroupModal = () => {
     showGroupModal.value = true
@@ -14,6 +16,8 @@ const openGroupModal = () => {
 const closeGroupModal = () => {
     showGroupModal.value = false
 }
+
+
 
 const handleGroupCreated = (newGroup) => {
     console.log('Новая группа создана:', newGroup)

@@ -114,7 +114,6 @@ export default {
 <style scoped>
 * {
     /* border: 1px solid red; */
-
 }
 
 .auth-container {
@@ -261,4 +260,5 @@ export default {
     background: #f8f9fa;
     border-color: #999;
 }
+
 </style>

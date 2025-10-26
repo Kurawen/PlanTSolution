@@ -1,5 +1,27 @@
 <script setup>
 import { ref } from 'vue'
+import ProblemCreate from '@/components/ProblemCreate.vue'
+import ProblemDetails from '@/components/ProblemDetails.vue'
+
+const showModal = ref(false)
+const showModal1 = ref(false)
+
+const openModal = () => {
+    showModal.value = true
+}
+
+const closeModal = () => {
+    showModal.value = false
+}
+
+const openModal1 = () => {
+    showModal1.value = true
+}
+
+const closeModal1 = () => {
+    showModal1.value = false
+}
+
 
 // Данные для календаря
 const currentDate = ref(new Date())
@@ -7,51 +29,51 @@ const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 // Данные для задач
 const tasks = ref([
-  {
-    id: 1,
-    title: 'Подготовить квартальный отчет',
-    deadline: '15.09.2025',
-    status: 'в работе',
-    priority: 'высокий',
-    executor: 'Анна Иванова',
-    completed: false
-  },
-  {
-    id: 2,
-    title: 'Провести еженедельную встречу команды',
-    deadline: '10.09.2025',
-    status: 'завершено',
-    priority: 'средний',
-    executor: 'Дмитрий Петров',
-    completed: true
-  },
-  {
-    id: 3,
-    title: 'Исследовать новые рыночные тенденции',
-    deadline: '20.09.2025',
-    status: 'к выполнению',
-    priority: 'низкий',
-    executor: 'Елена Смирнова',
-    completed: false
-  },
-  {
-    id: 4,
-    title: 'Обновить спецификации продукта',
-    deadline: '12.09.2025',
-    status: 'в работе',
-    priority: 'высокий',
-    executor: 'Сергей Козлов',
-    completed: false
-  },
-  {
-    id: 5,
-    title: 'Подготовить презентацию для клиента',
-    deadline: '18.09.2025',
-    status: 'в работе',
-    priority: 'средний',
-    executor: 'Мария Николаева',
-    completed: false
-  }
+    {
+        id: 1,
+        title: 'Подготовить квартальный отчет',
+        deadline: '15.09.2025',
+        status: 'в работе',
+        priority: 'высокий',
+        executor: 'Анна Иванова',
+        completed: false
+    },
+    {
+        id: 2,
+        title: 'Провести еженедельную встречу команды',
+        deadline: '10.09.2025',
+        status: 'завершено',
+        priority: 'средний',
+        executor: 'Дмитрий Петров',
+        completed: true
+    },
+    {
+        id: 3,
+        title: 'Исследовать новые рыночные тенденции',
+        deadline: '20.09.2025',
+        status: 'к выполнению',
+        priority: 'низкий',
+        executor: 'Елена Смирнова',
+        completed: false
+    },
+    {
+        id: 4,
+        title: 'Обновить спецификации продукта',
+        deadline: '12.09.2025',
+        status: 'в работе',
+        priority: 'высокий',
+        executor: 'Сергей Козлов',
+        completed: false
+    },
+    {
+        id: 5,
+        title: 'Подготовить презентацию для клиента',
+        deadline: '18.09.2025',
+        status: 'в работе',
+        priority: 'средний',
+        executor: 'Мария Николаева',
+        completed: false
+    }
 ])
 
 const activeTab = ref('all')
@@ -59,84 +81,84 @@ const selectedTasks = ref(new Set())
 
 // Функции для календаря
 const getDaysInMonth = (date) => {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
 }
 
 const getFirstDayOfMonth = (date) => {
-  return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
 }
 
 const generateCalendarDays = () => {
-  const daysInMonth = getDaysInMonth(currentDate.value)
-  const firstDay = getFirstDayOfMonth(currentDate.value)
-  const days = []
-  
-  // Пустые ячейки для начала месяца
-  for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-    days.push(null)
-  }
-  
-  // Дни месяца
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i)
-  }
-  
-  return days
+    const daysInMonth = getDaysInMonth(currentDate.value)
+    const firstDay = getFirstDayOfMonth(currentDate.value)
+    const days = []
+    
+    // Пустые ячейки для начала месяца
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+        days.push(null)
+    }
+    
+    // Дни месяца
+    for (let i = 1; i <= daysInMonth; i++) {
+        days.push(i)
+    }
+    
+    return days
 }
 
 const calendarDays = ref(generateCalendarDays())
 
 const prevMonth = () => {
-  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1)
-  calendarDays.value = generateCalendarDays()
+    currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1)
+    calendarDays.value = generateCalendarDays()
 }
 
 const nextMonth = () => {
-  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1)
-  calendarDays.value = generateCalendarDays()
+    currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1)
+    calendarDays.value = generateCalendarDays()
 }
 
 const getMonthName = () => {
-  const months = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-  ]
-  return months[currentDate.value.getMonth()]
+    const months = [
+        'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    ]
+    return months[currentDate.value.getMonth()]
 }
 
 // Функции для задач
 const toggleTaskSelection = (taskId) => {
-  if (selectedTasks.value.has(taskId)) {
-    selectedTasks.value.delete(taskId)
-  } else {
-    selectedTasks.value.add(taskId)
-  }
+    if (selectedTasks.value.has(taskId)) {
+        selectedTasks.value.delete(taskId)
+    } else {
+        selectedTasks.value.add(taskId)
+    }
 }
 
 const toggleAllTasks = () => {
-  if (selectedTasks.value.size === tasks.value.length) {
-    selectedTasks.value.clear()
-  } else {
-    tasks.value.forEach(task => selectedTasks.value.add(task.id))
-  }
+    if (selectedTasks.value.size === tasks.value.length) {
+        selectedTasks.value.clear()
+    } else {
+        tasks.value.forEach(task => selectedTasks.value.add(task.id))
+    }
 }
 
 const getPriorityClass = (priority) => {
-  switch (priority) {
-    case 'высокий': return 'priority-high'
-    case 'средний': return 'priority-medium'
-    case 'низкий': return 'priority-low'
-    default: return ''
-  }
+    switch (priority) {
+        case 'высокий': return 'priority-high'
+        case 'средний': return 'priority-medium'
+        case 'низкий': return 'priority-low'
+        default: return ''
+    }
 }
 
 const getStatusClass = (status) => {
-  switch (status) {
-    case 'завершено': return 'status-completed'
-    case 'в работе': return 'status-in-progress'
-    case 'к выполнению': return 'status-todo'
-    default: return ''
-  }
+    switch (status) {
+        case 'завершено': return 'status-completed'
+        case 'в работе': return 'status-in-progress'
+        case 'к выполнению': return 'status-todo'
+        default: return ''
+    }
 }
 </script>
 
@@ -146,7 +168,7 @@ const getStatusClass = (status) => {
             <!-- Заголовок -->
             <div class="problems-title">
                 <h1>Мои задачи</h1>
-                <button class="problem-create">+ Новая задача</button>
+                <button class="problem-create" @click="openModal">+ Новая задача</button>
             </div>
 
             <!-- Календарь -->
@@ -251,30 +273,31 @@ const getStatusClass = (status) => {
                         </div>
                         <div class="executor-column">{{ task.executor }}</div>
                         <div class="actions-column">
-                            <button class="action-btn">⋮</button>
+                            <button class="action-btn" @click="openModal1">⋮</button>
                         </div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
+
+    <ProblemCreate v-if="showModal" @close="closeModal"/>
+    <ProblemDetails v-if="showModal1" @close="closeModal1"/>
 </template>
 
 <style scoped>
 .problems-container {
     display: flex;
     justify-content: center;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    padding: 20px;
 }
 
 .problems {
     width: 100%;
     max-width: 1200px;
     background: white;
-    border-radius: 12px;
-    padding: 2rem;
+    border-radius: 5px;
+    padding: 30px;
+    margin-bottom: 1rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -287,7 +310,7 @@ const getStatusClass = (status) => {
 
 .problems-title h1 {
     font-size: 2rem;
-    color: #333;
+    color: black;
     margin: 0;
 }
 
@@ -382,14 +405,15 @@ const getStatusClass = (status) => {
 }
 
 .problems-type button {
-    background: none;
+    background-color: var(--bg-color);
     border: none;
+    border: 2px solid black;
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s;
-    color: #666;
+    color: black;
 }
 
 .problems-type button.active {

@@ -1,4 +1,27 @@
 <script setup>
+import { ref, computed } from 'vue'
+import SquadOtdel from './SquadOtdel.vue'
+import SquadRoleCreate from './SquadRoleCreate.vue'
+
+const showSquadOtdel = ref(false)
+const showAssignRoles = ref(false)
+
+const openSquadOtdelModal = () => {
+    showSquadOtdel.value = true
+}
+
+const closeSquadOtdelModal = () => {
+    showSquadOtdel.value = false
+}
+
+const openRoleCreateModal = () => {
+    showAssignRoles.value = true
+}
+
+const closeRoleCreateModal = () => {
+    showAssignRoles.value = false
+}
+
 const props = defineProps({
     title: {
         type: String,
@@ -11,17 +34,24 @@ const props = defineProps({
     memberCount: {
         type: Number,
         default: 0
-    }
+    },
 })
 
-const emit = defineEmits(['details', 'edit'])
-
-const handleDetails = () => {
-    emit('details', props.title)
-}
-
-const handleEdit = () => {
-    emit('edit', props.title)
+const squadDetails = {
+    name: props.title,
+    description: props.description,
+    memberCount: props.memberCount,
+    members: [
+        { name: 'Иван Петров', role: 'Руководитель проекта', avatar: 'ИП' },
+        { name: 'Мария Смирнова', role: 'Ведущий аналитик', avatar: 'МС' },
+        { name: 'Алексей Волков', role: 'Разработчик', avatar: 'АВ' },
+        { name: 'Елена Новикова', role: 'Дизайнер', avatar: 'ЕН' }
+    ],
+    files: [
+        { name: 'Проектная документация v2.0', type: 'DOCX', date: '15 марта 2024 г.', icon: '📄' },
+        { name: 'План маркетинговой кампании Q2', type: 'PDF', date: '10 марта 2024 г.', icon: '📊' },
+        { name: 'Отчет о прогрессе разработки', type: 'XLSX', date: '08 марта 2024 г.', icon: '📈' }
+    ]
 }
 </script>
 
@@ -35,10 +65,21 @@ const handleEdit = () => {
             <p class="squad-count-number">{{ memberCount }} участников</p>
         </div>
         <div class="squad-buttons">
-            <button class="squad-but" @click="handleDetails">Подробнее</button>
-            <button class="squad-but" @click="handleEdit">Редактировать</button>
+            <button class="squad-but" @click="openSquadOtdelModal">Подробнее</button>
+            <button class="squad-but" @click="openRoleCreateModal">Назначить роли</button>
         </div>
     </div>
+
+    <SquadOtdel 
+        v-if="showSquadOtdel" 
+        @close="closeSquadOtdelModal"
+        :squad-data="squadDetails"
+    />
+
+    <SquadRoleCreate
+        v-if="showAssignRoles" 
+        @close="closeRoleCreateModal"
+    />
 </template>
 
 <style scoped>

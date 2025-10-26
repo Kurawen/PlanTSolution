@@ -25,7 +25,7 @@ export default {
                 <p class="dev-title">В разработке</p>
                 <img src="../assets/plant-logo.svg" alt="растение в горшке" class="plant-dev">
             </div>
-            <hr id="hr">
+            <hr>
             <div class="close-button">
                 <button class="dev-but" @click="CloseModalWindow">Закрыть</button>
             </div>
@@ -70,7 +70,7 @@ export default {
 
 .dev-but {
     background-color: white;
-    border: 1px solid #DEE1E6FF;
+    border: 1px solid var(--border-color);
     color: black;
     font-size: 1rem;
     font-weight: bold;
@@ -112,11 +112,11 @@ export default {
     padding: 15px;
 }
 
-#hr {
-    color: #DEE1E6FF;
+hr {
+    /* color: var(--border-color); */
     height: 1px;
     border: none;
-    background-color: #DEE1E6FF;
+    background-color: var(--border-color);
     width: 100%;
 }
 
