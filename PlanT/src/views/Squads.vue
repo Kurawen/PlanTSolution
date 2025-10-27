@@ -152,7 +152,6 @@ onMounted(() => {
 }
 
 .squad-window {
-    border: 1px solid var(--border-color);
     border-radius: 8px;
     display: flex;
     flex-direction: column;

@@ -79,13 +79,7 @@ const toggleAuth = () => {
                         <h3>Управление задачами</h3>
                     </div>
                     <p class="keys-desc">Управляйте задачами и достигайте высот.</p>
-                    <button 
-                        v-if="showActionButtons" 
-                        class="keys-btn" 
-                        @click="openModal"
-                    >
-                        Перейти к задачам
-                    </button>
+                    <router-link v-if="showActionButtons" to="/problems" class="keys-btn">Перейти к задачам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -94,13 +88,7 @@ const toggleAuth = () => {
                         <h3>Работа в команде</h3>
                     </div>
                     <p class="keys-desc">Создавайте группы. Создавайте контент.</p>
-                    <button 
-                        v-if="showActionButtons" 
-                        class="keys-btn" 
-                        @click="openModal"
-                    >
-                        Перейти к группам
-                    </button>
+                    <router-link v-if="showActionButtons"  to="/squads" class="keys-btn">Перейти к группам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -109,13 +97,7 @@ const toggleAuth = () => {
                         <h3>Коммуникация</h3>
                     </div>
                     <p class="keys-desc">Взаимодействуйте с вашей командой.</p>
-                    <button 
-                        v-if="showActionButtons" 
-                        class="keys-btn" 
-                        @click="openModal"
-                    >
-                        Перейти к сообщениям
-                    </button>
+                    <router-link v-if="showActionButtons"  to="/messages" class="keys-btn">Перейти к сообщениям</router-link>
                 </div>
             </div>
         </section>
@@ -148,7 +130,7 @@ const toggleAuth = () => {
 .tasks {
     background-color: var(--bg-color);
     margin: 0 12rem;
-    padding: 4rem 4rem;
+    padding: 3rem 4rem;
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -187,7 +169,7 @@ const toggleAuth = () => {
 
 /* ключевые особенности */
 .keys {
-    padding: 4rem 2rem;
+    padding: 2.7rem 2rem;
     margin: 0 15rem;
 }
 
@@ -254,6 +236,8 @@ const toggleAuth = () => {
 }
 
 .keys-btn {
+    text-decoration: none;
+    color: black;
     background: transparent;
     border: 2px solid var(--border-color);
     border-radius: 5px;

@@ -162,7 +162,6 @@ const sendMessage = () => {
 }
 
 .messages {
-    border: 1px solid #e0e0e0;
     border-radius: 5px;
     display: flex;
     width: 100%;
@@ -171,6 +170,7 @@ const sendMessage = () => {
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    margin-bottom: 20px;
 }
 
 /* Список чатов */

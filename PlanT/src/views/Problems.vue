@@ -211,12 +211,6 @@ const getStatusClass = (status) => {
                         Все задачи
                     </button>
                     <button 
-                        :class="{ active: activeTab === 'personal' }"
-                        @click="activeTab = 'personal'"
-                    >
-                        Личные задачи
-                    </button>
-                    <button 
                         :class="{ active: activeTab === 'group' }"
                         @click="activeTab = 'group'"
                     >

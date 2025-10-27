@@ -6,8 +6,8 @@ export default {
             user: {
                 avatar: '',
                 username: 'Анастейша Стил',
-                email: 'editor50@mail.ru',
-                phone: '+7 (456) 13-34-45'
+                email: 'nastya50@mail.ru',
+                phone: '+7 (123) 456-78-90'
             },
             password: {
                 current: '',
@@ -57,7 +57,7 @@ export default {
                 <div class="avatar-section">
                     <div class="avatar-container">
                         <div class="avatar-placeholder">
-                            <span class="avatar-text">{{ user.username.charAt(0) }}</span>
+                            <span class="avatar-text"><img src="../assets/hanna.jpg" alt="мама" class="avatar-placeholder"></span>
                         </div>
                         <button class="avatar-change-btn" @click="changeAvatar">
                             Изменить аватар
@@ -69,9 +69,15 @@ export default {
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Имя пользователя</label>
-                        <div class="input-with-value">
+                        <input 
+                            type="name" 
+                            class="form-input"
+                            v-model="user.username"
+                            placeholder="Фамилия Имя"
+                        >
+                        <!-- <div class="input-with-value">
                             <span class="value-text">{{ user.username }}</span>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="form-group">
@@ -189,8 +195,8 @@ export default {
 }
 
 .section-divider {
-    height: 1px;
-    background-color: #e1e5e9;
+    height: 2px;
+    background-color: var(--border-color);
     margin: 2rem 0;
 }
 
@@ -206,14 +212,13 @@ export default {
 }
 
 .avatar-placeholder {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid white;
+    border: 2px solid white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -225,8 +230,8 @@ export default {
 
 .avatar-change-btn {
     background: none;
-    border: 2px solid #007bff;
-    color: #007bff;
+    border: 2px solid black;
+    color: black;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -236,8 +241,7 @@ export default {
 }
 
 .avatar-change-btn:hover {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--bg-color);
 }
 
 /* Формы */
@@ -256,7 +260,7 @@ export default {
 .form-label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #333;
+    color: black;
     margin-bottom: 0.25rem;
 }
 
@@ -271,8 +275,7 @@ export default {
 
 .form-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: black;
 }
 
 .form-input::placeholder {
@@ -285,7 +288,6 @@ export default {
     border: 2px solid #e1e5e9;
     border-radius: 8px;
     background-color: #f8f9fa;
-    cursor: not-allowed;
 }
 
 .value-text {
@@ -303,9 +305,9 @@ export default {
 }
 
 .btn-save {
-    background-color: #007bff;
+    background-color: black;
     color: white;
-    border: none;
+    border: 2px solid black;
     padding: 1rem 2rem;
     border-radius: 8px;
     font-size: 1rem;
@@ -315,8 +317,8 @@ export default {
 }
 
 .btn-save:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    background-color: white;
+    color: black;
 }
 
 .btn-logout {
@@ -334,7 +336,6 @@ export default {
 .btn-logout:hover {
     background-color: #dc3545;
     color: white;
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 </style>

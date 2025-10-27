@@ -95,6 +95,7 @@ hr {
     font-size: 1rem;
     border-radius: 5px;
     padding: 10px 15px;
+    cursor: pointer;
 }
 
 .button-otmena {

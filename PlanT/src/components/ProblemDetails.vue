@@ -169,6 +169,7 @@ h6 {
     border-radius: 5px;
     padding: 10px 14px;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .btn-delete {

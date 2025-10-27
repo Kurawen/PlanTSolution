@@ -1,11 +1,12 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { RouterView } from 'vue-router'
 
 // Данные профиля
 const profile = reactive({
-    name: 'Алиса Джонсон',
-    email: 'somebody@mail.ru',
-    phone: '+7 (123) 456-78-95'
+    name: 'Анастейша Стил',
+    email: 'nastya50@mail.ru',
+    phone: '+7 (123) 456-78-90'
 })
 
 // Редактируемая копия профиля
@@ -61,14 +62,11 @@ const saveProfile = () => {
                     <span>{{ getInitials }}</span>
                 </div>
                 <h1 class="profile-name">{{ profile.name }}</h1>
-                <p class="profile-title">Старший менеджер проекта</p>
                 <div class="contact-info">
                     <div class="contact-item">
-                        <div class="contact-icon">✉️</div>
                         <span>{{ profile.email }}</span>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">📱</div>
                         <span>{{ profile.phone }}</span>
                     </div>
                 </div>
@@ -77,29 +75,8 @@ const saveProfile = () => {
             <div class="profile-body">
                 <div class="section">
                     <h2 class="section-title">Профиль</h2>
-                    <button class="btn" @click="toggleEditMode">
-                        <span v-if="!isEditing">✏️ Редактировать профиль</span>
-                        <span v-else>❌ Отменить редактирование</span>
-                    </button>
-                    
-                    <div v-if="isEditing" class="edit-form">
-                        <div class="form-group">
-                            <label class="form-label">Имя</label>
-                            <input type="text" class="form-input" v-model="editProfile.name">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Электронная почта</label>
-                            <input type="email" class="form-input" v-model="editProfile.email">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Телефон</label>
-                            <input type="tel" class="form-input" v-model="editProfile.phone">
-                        </div>
-                        <div class="form-actions">
-                            <button class="btn btn-secondary" @click="cancelEdit">Отмена</button>
-                            <button class="btn" @click="saveProfile">Сохранить</button>
-                        </div>
-                    </div>
+                    <router-link to="/settings" class="section-change">Редактировать профиль</router-link>
+
                 </div>
                 
                 <div class="section">
@@ -134,8 +111,7 @@ const saveProfile = () => {
 }
 
 .profile-header {
-    background: linear-gradient(135deg, #4a6fa5, #6b8cbc);
-    color: white;
+    background-color: white;
     padding: 30px;
     text-align: center;
     position: relative;
@@ -160,12 +136,7 @@ const saveProfile = () => {
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 8px;
-}
-
-.profile-title {
-    font-size: 16px;
-    opacity: 0.9;
-    margin-bottom: 20px;
+    color: black;
 }
 
 .contact-info {
@@ -208,6 +179,20 @@ const saveProfile = () => {
     gap: 8px;
 }
 
+.section-change {
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: black;
+    background-color: white;
+    border-radius: 5px;
+    border: 2px solid var(--border-color);
+    padding: 10px 15px;
+}
+
+.section-change:hover {
+    background-color: var(--bg-color);
+}
+
 .section-title::after {
     content: '';
     flex-grow: 1;
@@ -241,10 +226,9 @@ const saveProfile = () => {
 }
 
 .group-item {
-    background-color: #f5f7fa;
+    background-color: var(--bg-color);
     border-radius: 8px;
     padding: 16px;
-    border-left: 4px solid #4a6fa5;
     transition: all 0.3s ease;
 }
 
@@ -259,7 +243,7 @@ const saveProfile = () => {
 }
 
 .group-role {
-    color: #6b8cbc;
+    color: grey;
     font-size: 14px;
 }
 

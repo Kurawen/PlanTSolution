@@ -26,7 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // ¯\_(ツ)_/¯
-app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
+// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
@@ -40,8 +40,8 @@ app.MapGroup("/groups").MapGroupApi();
 app.MapGroup("/group_members").MapGroupMemberApi();
 app.MapGroup("/messages").MapMessageApi();
 app.MapGroup("/notifications").MapNotificationApi();
-app.MapGroup("/tasks").MapTaskApi();
-app.MapGroup("/task_comments").MapTaskCommentApi();
+app.MapGroup("/problems").MapTaskApi();
+// app.MapGroup("/task_comments").MapTaskCommentApi();
 app.MapGroup("/users").MapUserApi();
 app.MapGroup("/user_passwords").MapUserPasswordApi();
 app.MapGroup("/user_profiles").MapUserProfileApi();
