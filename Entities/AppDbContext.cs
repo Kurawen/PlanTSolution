@@ -12,28 +12,16 @@ namespace Entities
 {
     public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
-        // public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<User> Users { get; set; }
         public DbSet<User_profile> UserProfiles { get; set; }
-        public DbSet<Task> Task { get; set; }
+        public DbSet<Problem> Problem { get; set; }
         public DbSet<User_password> UserPasswords { get; set; }
-        public DbSet<Task_comment> TaskComments { get; set; }
+        // public DbSet<Task_comment> TaskComments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Group_member> GroupMembers { get; set; }
         public DbSet<Channel> Channels { get; set; }
 
-        public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
-        {
-            public AppDbContext CreateDbContext(string[] args)
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-                optionsBuilder.UseNpgsql("Host=localhost;Database=PlanT;Username=postgres;Password=123;");
-
-                return new AppDbContext(optionsBuilder.Options);
-            }
-        }
     }
 }
