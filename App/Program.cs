@@ -1,7 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Security.Claims;
+using System.Drawing;
+using System.Text;
+
 using App.Api;
 using Entities;
-using System.Drawing;
 
 // база для api
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +24,43 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// builder.Services.AddAuthorization();
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(FileOptions =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidIssuer = AuthOptions.ISSUER,
+//             ValidateAudience = true,
+//             ValidAudience = AuthOptions.AUDIENCE,
+//             ValidateLifetime = true,
+//             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+//             ValidateIssuerSigningKey = true,
+//         };
+//     });
+
 // база для приложения
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+// app.Map("/login/{username}", (string username) =>
+// {
+//     var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+
+//     var jwt = new JwtSecurityToken(
+//         issuer: AuthOptions.ISSUER,
+//         audience: AuthOptions.AUDIENCE,
+//         claims: claims,
+//         expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+//         signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+//     return new JwtSecurityTokenHandler().WriteToken(jwt);
+// });
+
+// app.Map("/data", [Authorize] () => new { message = "тест тест тест" });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,12 +69,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// ¯\_(ツ)_/¯
+// ¯\_(ツ)_/¯ - не трогать
 // app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.UseRouting();
 app.MapControllers();
 

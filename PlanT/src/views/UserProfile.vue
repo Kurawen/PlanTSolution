@@ -59,7 +59,7 @@ const saveProfile = () => {
         <div class="profile-card">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    <span>{{ getInitials }}</span>
+                    <img src="../assets/hanna.jpg" alt="" class="profile-avatar">
                 </div>
                 <h1 class="profile-name">{{ profile.name }}</h1>
                 <div class="contact-info">
@@ -121,14 +121,11 @@ const saveProfile = () => {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 4px solid white;
-    background-color: #d1e0f0;
     margin: 0 auto 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 48px;
-    color: #4a6fa5;
     font-weight: bold;
 }
 
@@ -173,7 +170,7 @@ const saveProfile = () => {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 16px;
-    color: #2c3e50;
+    color: black;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -191,14 +188,6 @@ const saveProfile = () => {
 
 .section-change:hover {
     background-color: var(--bg-color);
-}
-
-.section-title::after {
-    content: '';
-    flex-grow: 1;
-    height: 1px;
-    background-color: #e1e8ed;
-    margin-left: 10px;
 }
 
 .btn {

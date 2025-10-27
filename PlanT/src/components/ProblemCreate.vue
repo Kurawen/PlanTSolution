@@ -209,8 +209,7 @@ export default {
 .problem-textarea:focus,
 .problem-select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: black;
 }
 
 .problem-textarea {

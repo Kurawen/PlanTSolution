@@ -54,10 +54,10 @@ const toggleAuth = () => {
                     <!-- Для авторизованных пользователей -->
                     <template v-if="showUserLinks">
                         <router-link to="/settings">
-                            <img src="../assets/gear.svg" alt="настройки" class="main-icon">
+                            <img src="../assets/gear4.svg" alt="настройки" class="main-icon">
                         </router-link>
                         <img 
-                            src="../assets/notification.svg" 
+                            src="../assets/bell2.svg" 
                             alt="уведомления" 
                             class="main-icon" 
                             @click="emit('open-notifications')"
@@ -220,14 +220,12 @@ const toggleAuth = () => {
 .dno {
     color: black;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     font-weight: 500;
     font-size: 1.2rem;
     padding: 1rem 2rem;
     background-color: white;
-    /* border-top: 1px solid var(--border-color); */
 }
 
 .dno > p {
