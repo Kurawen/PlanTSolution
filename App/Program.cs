@@ -9,8 +9,10 @@ using System.Security.Claims;
 using System.Drawing;
 using System.Text;
 
-using App.Api;
+using App.Services;
 using Entities;
+using App.Api;
+
 
 // база для api
 var builder = WebApplication.CreateBuilder(args);
@@ -20,47 +22,44 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // базовые сервисы
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
-// builder.Services.AddAuthorization();
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(FileOptions =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidIssuer = AuthOptions.ISSUER,
-//             ValidateAudience = true,
-//             ValidAudience = AuthOptions.AUDIENCE,
-//             ValidateLifetime = true,
-//             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-//             ValidateIssuerSigningKey = true,
-//         };
-//     });
+// аутентификация идет первая, только потом авторизация
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])
+            )
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 // база для приложения
 var app = builder.Build();
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-// app.Map("/login/{username}", (string username) =>
-// {
-//     var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
-
-//     var jwt = new JwtSecurityToken(
-//         issuer: AuthOptions.ISSUER,
-//         audience: AuthOptions.AUDIENCE,
-//         claims: claims,
-//         expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
-//         signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-//     return new JwtSecurityTokenHandler().WriteToken(jwt);
-// });
-
-// app.Map("/data", [Authorize] () => new { message = "тест тест тест" });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,14 +69,14 @@ if (app.Environment.IsDevelopment())
 }
 
 // ¯\_(ツ)_/¯ - не трогать
-// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
+app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
-app.UseRouting();
 app.MapControllers();
 
 // регистрации api
+app.MapGroup("/auth").MapAuthApi();
 app.MapGroup("/channels").MapChannelApi();
 app.MapGroup("/groups").MapGroupApi();
 app.MapGroup("/group_members").MapGroupMemberApi();
