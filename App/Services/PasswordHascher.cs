@@ -1,8 +1,10 @@
-﻿namespace App.Services
+﻿using BCrypt.Net;
+
+namespace App.Services
 {
-    public class PasswordHasher : IPasswordHasher
+    public class PasswordHasher
     {
-        public string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }

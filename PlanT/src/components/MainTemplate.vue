@@ -17,6 +17,65 @@ const emit = defineEmits(['open-auth', 'open-notifications'])
 // Состояние авторизации
 const isAuthenticated = ref(true)
 
+// Данные уведомлений перенесены из App.vue
+const notificationsData = ref({
+    chatNotifications: [
+        {
+            id: 1,
+            title: 'Команда маркетинга',
+            message: 'Отчет за Q3 готов к проверке.',
+            time: '10 минут назад',
+            avatar: ''
+        },
+        {
+            id: 2,
+            title: 'Проект Alpha',
+            message: 'Обновление статуса: Встреча в 15.00.',
+            time: '2 часа назад',
+            avatar: ''
+        },
+        {
+            id: 3,
+            title: 'Отдел продаж',
+            message: 'Новый клиент: Свяжитесь с Эмили Браун.',
+            time: 'Вчера',
+            avatar: ''
+        }
+    ],
+    taskNotifications: [
+        {
+            id: 1,
+            title: 'Разработать фичу авторизации',
+            status: 'Приближается срок',
+            assignee: 'Анна Смирнова',
+            priority: 'high',
+            dueDate: '2024-07-30'
+        },
+        {
+            id: 2,
+            title: 'Обзор дизайна домашней страницы',
+            assignee: 'Дмитрий Иванов',
+            dueDate: '30.07.2024',
+            priority: 'medium'
+        },
+        {
+            id: 3,
+            title: 'Исправить ошибку #BUG-456',
+            assignee: 'Сергей Петров',
+            dueDate: '15.07.2024',
+            priority: 'high'
+        },
+        {
+            id: 4,
+            title: 'Подготовить презентацию для клиентов',
+            assignee: 'Елена Кузнецова',
+            dueDate: '28.07.2024',
+            status: 'Продолжается срок',
+            priority: 'medium'
+        }
+    ]
+})
+
 // Вычисляемые свойства для разных состояний
 const showAuthLinks = computed(() => !isAuthenticated.value)
 const showUserLinks = computed(() => isAuthenticated.value)
@@ -24,6 +83,11 @@ const showUserLinks = computed(() => isAuthenticated.value)
 // Функция для переключения состояния (для демонстрации)
 const toggleAuth = () => {
     isAuthenticated.value = !isAuthenticated.value
+}
+
+// Функция для открытия уведомлений
+const openNotifications = () => {
+    emit('open-notifications', notificationsData.value)
 }
 </script>
 
@@ -33,8 +97,8 @@ const toggleAuth = () => {
         <header id="shapka" v-if="!hideHeader">
             <nav class="navbar">
                 <div class="nav-title">
-                    <img src="../assets/plant-logo.svg" alt="растение" class="plant-dev">
-                    <p class="nav-logo">PlanT</p>
+                    <a href="/"><img src="../assets/plant-logo.svg" alt="растение" class="plant-dev"></a>
+                    <a href="/" style="text-decoration: none;"><p class="nav-logo">PlanT</p></a>
                 </div>
                 
                 <!-- Навигационные ссылки -->
@@ -60,7 +124,7 @@ const toggleAuth = () => {
                             src="../assets/bell2.svg" 
                             alt="уведомления" 
                             class="main-icon" 
-                            @click="emit('open-notifications')"
+                            @click="openNotifications"
                         >
                         <router-link to="/profile">
                             <img src="../assets/hanna.jpg" alt="личный кабинет" class="photo-link">
@@ -234,7 +298,7 @@ const toggleAuth = () => {
 }
 
 .main-icon {
-    max-width: 40px;
+    max-width: 35px;
     height: auto;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;

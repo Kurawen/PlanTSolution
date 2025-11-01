@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ProblemCreate from '@/components/ProblemCreate.vue'
 import ProblemDetails from '@/components/ProblemDetails.vue'
+import ProblemLine from '@/components/ProblemLine.vue'
 
 const showModal = ref(false)
 const showModal1 = ref(false)
@@ -21,7 +22,6 @@ const openModal1 = () => {
 const closeModal1 = () => {
     showModal1.value = false
 }
-
 
 // Данные для календаря
 const currentDate = ref(new Date())
@@ -45,13 +45,13 @@ const tasks = ref([
         status: 'завершено',
         priority: 'средний',
         executor: 'Дмитрий Петров',
-        completed: true
+        completed: false
     },
     {
         id: 3,
         title: 'Исследовать новые рыночные тенденции',
         deadline: '20.09.2025',
-        status: 'к выполнению',
+        status: 'не начато',
         priority: 'низкий',
         executor: 'Елена Смирнова',
         completed: false
@@ -75,6 +75,22 @@ const tasks = ref([
         completed: false
     }
 ])
+
+// Функция добавления новой задачи
+const addNewTask = (newTaskData) => {
+    const newTask = {
+        id: tasks.value.length + 1,
+        title: newTaskData.title,
+        deadline: newTaskData.deadline,
+        status: newTaskData.status || 'к выполнению',
+        priority: newTaskData.priority || 'средний',
+        executor: newTaskData.executor,
+        completed: false
+    }
+    
+    tasks.value.push(newTask)
+    closeModal()
+}
 
 const activeTab = ref('all')
 const selectedTasks = ref(new Set())
@@ -160,6 +176,61 @@ const getStatusClass = (status) => {
         default: return ''
     }
 }
+
+// Добавляем ref для сортировки
+const sortBy = ref('deadline')
+const sortDirection = ref('asc')
+
+// Функции для сортировки
+const sortTasks = (tasks) => {
+    return [...tasks].sort((a, b) => {
+        let valueA, valueB
+        
+        switch (sortBy.value) {
+            case 'deadline':
+                valueA = new Date(a.deadline.split('.').reverse().join('-'))
+                valueB = new Date(b.deadline.split('.').reverse().join('-'))
+                break
+            case 'priority':
+                const priorityOrder = { 'высокий': 3, 'средний': 2, 'низкий': 1 }
+                valueA = priorityOrder[a.priority] || 0
+                valueB = priorityOrder[b.priority] || 0
+                break
+            case 'status':
+                const statusOrder = { 'к выполнению': 1, 'в работе': 2, 'завершено': 3 }
+                valueA = statusOrder[a.status] || 0
+                valueB = statusOrder[b.status] || 0
+                break
+            default:
+                return 0
+        }
+        
+        if (valueA < valueB) return sortDirection.value === 'asc' ? -1 : 1
+        if (valueA > valueB) return sortDirection.value === 'asc' ? 1 : -1
+        return 0
+    })
+}
+
+// Функция для изменения сортировки
+const changeSort = (field) => {
+    if (sortBy.value === field) {
+        sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+    } else {
+        sortBy.value = field
+        sortDirection.value = 'asc'
+    }
+}
+
+// Вычисляемое свойство для отсортированных задач
+const sortedTasks = computed(() => sortTasks(tasks.value))
+
+// Функция для получения иконки сортировки
+const getSortIcon = (field) => {
+    if (sortBy.value !== field) return '↕️'
+    return sortDirection.value === 'asc' ? '↑' : '↓'
+}
+
+
 </script>
 
 <template>
@@ -168,7 +239,7 @@ const getStatusClass = (status) => {
             <!-- Заголовок -->
             <div class="problems-title">
                 <h1>Мои задачи</h1>
-                <button class="problem-create" @click="openModal">+ Новая задача</button>
+                <button class="btn-black btn-black-md" @click="openModal">+ Новая задача</button>
             </div>
 
             <!-- Календарь -->
@@ -229,53 +300,40 @@ const getStatusClass = (status) => {
                             />
                         </div>
                         <div class="task-column">ЗАДАЧА</div>
-                        <div class="deadline-column">СРОК</div>
-                        <div class="status-column">СТАТУС</div>
-                        <div class="priority-column">ПРИОРИТЕТ</div>
+                        <div class="deadline-column sortable" @click="changeSort('deadline')">
+                            СРОК {{ getSortIcon('deadline') }}
+                        </div>
+                        <div class="status-column sortable" @click="changeSort('status')">
+                            СТАТУС {{ getSortIcon('status') }}
+                        </div>
+                        <div class="priority-column sortable" @click="changeSort('priority')">
+                            ПРИОРИТЕТ {{ getSortIcon('priority') }}
+                        </div>
                         <div class="executor-column">ИСПОЛНИТЕЛЬ</div>
                         <div class="actions-column">ДЕЙСТВИЯ</div>
                     </div>
 
-                    <!-- Строки с задачами -->
-                    <div 
-                        v-for="task in tasks" 
-                        :key="task.id" 
-                        class="task-row"
-                    >
-                        <div class="checkbox-column">
-                            <input 
-                                type="checkbox" 
-                                :checked="selectedTasks.has(task.id)"
-                                @change="toggleTaskSelection(task.id)"
-                            />
-                        </div>
-                        <div class="task-column">
-                            <span :class="{ 'completed': task.completed }">
-                                {{ task.title }}
-                            </span>
-                        </div>
-                        <div class="deadline-column">{{ task.deadline }}</div>
-                        <div class="status-column">
-                            <span :class="getStatusClass(task.status)">
-                                {{ task.status }}
-                            </span>
-                        </div>
-                        <div class="priority-column">
-                            <span :class="getPriorityClass(task.priority)">
-                                {{ task.priority }}
-                            </span>
-                        </div>
-                        <div class="executor-column">{{ task.executor }}</div>
-                        <div class="actions-column">
-                            <button class="action-btn" @click="openModal1">⋮</button>
-                        </div>
-                    </div>
+                    <!-- Используем компонент ProblemLine для каждой задачи -->
+                    <ProblemLine 
+                        v-for="task in sortedTasks" 
+                        :key="task.id"
+                        :task="task"
+                        :selected="selectedTasks.has(task.id)"
+                        @toggle-selection="toggleTaskSelection(task.id)"
+                        @open-details="openModal1"
+                    />
                 </div>
             </section>
         </div>
     </div>
 
-    <ProblemCreate v-if="showModal" @close="closeModal"/>
+    <!-- Модальное окно создания задачи -->
+    <ProblemCreate 
+        v-if="showModal" 
+        @close="closeModal"
+        @create-task="addNewTask"
+    />
+    
     <ProblemDetails v-if="showModal1" @close="closeModal1"/>
 </template>
 
@@ -290,7 +348,7 @@ const getStatusClass = (status) => {
     max-width: 1200px;
     background: white;
     border-radius: 5px;
-    padding: 30px;
+    padding: 2rem;
     margin-bottom: 1rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -326,8 +384,8 @@ const getStatusClass = (status) => {
 /* Календарь */
 .problems-calendar {
     margin-bottom: 2rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
     padding: 1rem;
 }
 
@@ -399,7 +457,7 @@ const getStatusClass = (status) => {
 }
 
 .problems-type button {
-    background-color: var(--bg-color);
+    background-color: white;
     border: none;
     border: 2px solid black;
     padding: 0.75rem 1.5rem;
@@ -416,7 +474,7 @@ const getStatusClass = (status) => {
 }
 
 .problems-type button:not(.active):hover {
-    background: #f5f5f5;
+    background: var(--bg-color);
     color: #333;
 }
 
@@ -438,100 +496,4 @@ const getStatusClass = (status) => {
     border-bottom: 1px solid #e0e0e0;
     align-items: center;
 }
-
-.task-row {
-    display: grid;
-    grid-template-columns: 50px 2fr 1fr 1fr 1fr 1.5fr 80px;
-    gap: 1rem;
-    padding: 1rem;
-    border-bottom: 1px solid #f0f0f0;
-    align-items: center;
-    transition: background-color 0.2s;
-}
-
-.task-row:hover {
-    background: #f8f9fa;
-}
-
-.task-row:last-child {
-    border-bottom: none;
-}
-
-/* Колонки */
-.checkbox-column {
-    display: flex;
-    justify-content: center;
-}
-
-.task-column {
-    font-weight: 500;
-}
-
-.deadline-column,
-.executor-column {
-    color: #666;
-}
-
-.status-column span,
-.priority-column span {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-/* Статусы */
-.status-completed {
-    background: #e8f5e8;
-    color: #2e7d32;
-}
-
-.status-in-progress {
-    background: #e3f2fd;
-    color: #1565c0;
-}
-
-.status-todo {
-    background: #fff3e0;
-    color: #ef6c00;
-}
-
-/* Приоритеты */
-.priority-high {
-    background: #ffebee;
-    color: #c62828;
-}
-
-.priority-medium {
-    background: #fff3e0;
-    color: #ef6c00;
-}
-
-.priority-low {
-    background: #e8f5e8;
-    color: #2e7d32;
-}
-
-/* Завершенные задачи */
-.completed {
-    text-decoration: line-through;
-    color: #999;
-}
-
-/* Кнопка действий */
-.action-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: #666;
-    padding: 0.25rem;
-    border-radius: 4px;
-}
-
-.action-btn:hover {
-    background: #f0f0f0;
-    color: #333;
-}
-
 </style>

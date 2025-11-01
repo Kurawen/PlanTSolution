@@ -73,8 +73,8 @@ const handleSave = () => {
             </div>
 
             <div class="action-buttons">
-                <button class="btn-cancel" @click="handleCancel">Отмена</button>
-                <button class="btn-save" @click="handleSave">Сохранить изменения</button>
+                <button class="btn-gray btn-gray-md" @click="handleCancel">Отмена</button>
+                <button class="btn-black btn-black-md" @click="handleSave">Сохранить изменения</button>
             </div>
         </div>
     </div>

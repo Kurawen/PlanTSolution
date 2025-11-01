@@ -1,143 +1,145 @@
-<script>
-export default {
-    name: 'Notifications',
-    props: {
-        chatNotifications: {
-            type: Array,
-            default: () => []
-        },
-        taskNotifications: {
-            type: Array,
-            default: () => []
-        }
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+
+const props = defineProps({
+    chatNotifications: {
+        type: Array,
+        default: () => []
     },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        getPriorityClass(priority) {
-            const classes = {
-                'high': 'priority-high',
-                'medium': 'priority-medium',
-                'low': 'priority-low'
-            };
-            return classes[priority] || 'priority-medium';
-        }
+    taskNotifications: {
+        type: Array,
+        default: () => []
     }
+})
+
+const emit = defineEmits(['close'])
+
+const getPriorityClass = (priority) => {
+    const classes = {
+        'high': 'priority-high',
+        'medium': 'priority-medium',
+        'low': 'priority-low'
+    };
+    return classes[priority] || 'priority-medium';
+}
+
+const close = () => {
+    emit('close');
 }
 </script>
 
 <template>
-    <div class="notifications-section">
-        <div class="notification-window">
-            <!-- Заголовок -->
-            <div class="top-title">
-                <h2 class="notif-title">Уведомления</h2>
+    <div class="notifications-container">
+        <div class="notifications-content" @click.stop>
+            <div class="notifications-header">
+                <h2>Уведомления</h2>
                 <button class="close-btn" @click="close">×</button>
             </div>
             
-            <hr>
-            
-            <!-- Описание -->
-            <p class="notif-desc">Просматривайте уведомления о чатах и задачах.</p>
-
-            <!-- Уведомления чата -->
-            <section class="notif-chat" v-if="chatNotifications.length > 0">
-                <h3 class="section-title">Уведомления чата</h3>
-                
-                <div class="chat-notifications">
-                    <div 
-                        v-for="notification in chatNotifications"
-                        :key="notification.id"
-                        class="chat-cont"
-                    >
-                        <div class="chat-avatar">
-                            <img :src="notification.avatar" :alt="notification.title" class="chat-img" v-if="notification.avatar">
-                            <div class="avatar-placeholder" v-else>{{ notification.title.charAt(0) }}</div>
-                        </div>
-                        <div class="chat-content">
-                            <div class="chat-header">
-                                <h6 class="chat-title">{{ notification.title }}</h6>
-                                <span class="chat-time">{{ notification.time }}</span>
+            <div class="notifications-body">
+                <!-- Секция чат-уведомлений -->
+                <div class="notif-chat" v-if="chatNotifications.length > 0">
+                    <h3 class="section-title">Сообщения</h3>
+                    <div class="chat-notifications">
+                        <div 
+                            v-for="notification in chatNotifications" 
+                            :key="notification.id" 
+                            class="chat-cont"
+                        >
+                            <div class="chat-avatar">
+                                <div v-if="notification.avatar" class="chat-img">
+                                    <img :src="notification.avatar" :alt="notification.title">
+                                </div>
+                                <div v-else class="avatar-placeholder">
+                                    {{ notification.title.charAt(0) }}
+                                </div>
                             </div>
-                            <p class="chat-message">{{ notification.message }}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Уведомления задач -->
-            <section class="notif-task" v-if="taskNotifications.length > 0">
-                <h3 class="section-title">Уведомления по задачам</h3>
-                
-                <div class="task-notifications">
-                    <div 
-                        v-for="task in taskNotifications"
-                        :key="task.id"
-                        class="task-cont"
-                    >
-                        <div class="task-main">
-                            <h6 class="task-title">{{ task.title }}</h6>
-                            <div class="task-details">
-                                <div class="task-meta">
-                                    <span class="task-assignee" v-if="task.assignee">{{ task.assignee }}</span>
-                                    <span class="task-date" v-if="task.dueDate">{{ task.dueDate }}</span>
+                            <div class="chat-content">
+                                <div class="chat-header">
+                                    <h4 class="chat-title">{{ notification.title }}</h4>
+                                    <span class="chat-time">{{ notification.time }}</span>
                                 </div>
-                                <div class="task-status">
-                                    <span class="task-priority" :class="getPriorityClass(task.priority)">
-                                        {{ task.priority === 'high' ? 'Высокий' : task.priority === 'medium' ? 'Средний' : 'Низкий' }}
-                                    </span>
-                                    <span class="task-status-text" v-if="task.status">{{ task.status }}</span>
-                                </div>
+                                <p class="chat-message">{{ notification.message }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Сообщение если уведомлений нет -->
-            <div v-if="chatNotifications.length === 0 && taskNotifications.length === 0" class="no-notifications">
-                <p>Нет новых уведомлений</p>
+                <!-- Секция уведомлений о задачах -->
+                <div class="notif-task" v-if="taskNotifications.length > 0">
+                    <h3 class="section-title">Задачи</h3>
+                    <div class="task-notifications">
+                        <div 
+                            v-for="task in taskNotifications" 
+                            :key="task.id" 
+                            class="task-cont"
+                        >
+                            <div class="task-main">
+                                <h4 class="task-title">{{ task.title }}</h4>
+                                <div class="task-details">
+                                    <div class="task-meta">
+                                        <span class="task-assignee">{{ task.assignee }}</span>
+                                        <span class="task-date">Срок: {{ task.dueDate }}</span>
+                                    </div>
+                                    <div class="task-status">
+                                        <span 
+                                            class="task-priority" 
+                                            :class="getPriorityClass(task.priority)"
+                                        >
+                                            {{ task.priority }}
+                                        </span>
+                                        <span v-if="task.status" class="task-status-text">
+                                            {{ task.status }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Если уведомлений нет -->
+                <div v-if="chatNotifications.length === 0 && taskNotifications.length === 0" class="no-notifications">
+                    <p>У вас пока нет уведомлений</p>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.notifications-section {
+.notifications-container {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-.notification-window {
-    display: flex;
-    flex-direction: column;
+.notifications-content {
     background-color: white;
     border-radius: 12px;
-    padding: 24px;
     width: 600px;
     max-width: 90vw;
     max-height: 80vh;
     overflow-y: auto;
-    gap: 16px;
+    animation: slideIn 0.3s ease-out;
 }
 
-.top-title {
+.notifications-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid #e1e5e9;
 }
 
-.notif-title {
+.notifications-header h2 {
     font-family: 'Inter', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
@@ -166,20 +168,8 @@ export default {
     color: #333;
 }
 
-hr {
-    height: 1px;
-    border: none;
-    background-color: #e1e5e9;
-    width: 100%;
-    margin: 8px 0;
-}
-
-.notif-desc {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0;
-    line-height: 1.4;
+.notifications-body {
+    padding: 16px 24px 24px 24px;
 }
 
 .section-title {
@@ -192,8 +182,7 @@ hr {
 
 .notif-chat,
 .notif-task {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 24px;
 }
 
 .chat-notifications {
@@ -217,11 +206,11 @@ hr {
     border-radius: 8px;
     transition: background-color 0.2s ease;
     cursor: pointer;
-    border: 1px solid #e1e5e9;
+    border: 1px solid var(--border-color);
 }
 
 .chat-cont:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg2-color);
 }
 
 .chat-avatar {
@@ -241,7 +230,7 @@ hr {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background-color: #007bff;
+    background-color: black;
     color: white;
     display: flex;
     align-items: center;
@@ -292,15 +281,14 @@ hr {
 .task-cont {
     padding: 16px;
     border-radius: 8px;
-    border: 1px solid #e1e5e9;
-    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    background-color: white;
     transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .task-cont:hover {
-    border-color: #007bff;
-    background-color: white;
+    background-color: var(--bg2-color);
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
 }
 
@@ -398,9 +386,21 @@ hr {
     margin: 0;
 }
 
+/* Анимация */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 /* Адаптивность */
 @media (max-width: 640px) {
-    .notification-window {
+    .modal-content {
         padding: 20px;
         margin: 20px;
         width: calc(100% - 40px);
@@ -418,16 +418,16 @@ hr {
 }
 
 /* Скроллбар */
-.notification-window::-webkit-scrollbar {
+.modal-content::-webkit-scrollbar {
     width: 6px;
 }
 
-.notification-window::-webkit-scrollbar-track {
+.modal-content::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 3px;
 }
 
-.notification-window::-webkit-scrollbar-thumb {
+.modal-content::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 3px;
 }

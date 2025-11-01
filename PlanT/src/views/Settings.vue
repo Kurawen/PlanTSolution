@@ -59,7 +59,7 @@ export default {
                         <div class="avatar-placeholder">
                             <span class="avatar-text"><img src="../assets/hanna.jpg" alt="мама" class="avatar-placeholder"></span>
                         </div>
-                        <button class="avatar-change-btn" @click="changeAvatar">
+                        <button class="btn-gray btn-gray-md" @click="changeAvatar">
                             Изменить аватар
                         </button>
                     </div>
@@ -144,10 +144,10 @@ export default {
 
             <!-- Кнопки действий -->
             <div class="action-buttons">
-                <button class="btn-save" @click="saveChanges">
+                <button class="btn-black btn-gray-md" @click="saveChanges">
                     Сохранить изменения
                 </button>
-                <button class="btn-logout" @click="logout">
+                <button class="btn-gray btn-gray-md" @click="logout">
                     Выйти из аккаунта
                 </button>
             </div>
@@ -228,22 +228,6 @@ export default {
     color: white;
 }
 
-.avatar-change-btn {
-    background: none;
-    border: 2px solid black;
-    color: black;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.avatar-change-btn:hover {
-    background-color: var(--bg-color);
-}
-
 /* Формы */
 .form-grid {
     display: flex;
@@ -302,23 +286,6 @@ export default {
     flex-direction: column;
     gap: 1rem;
     margin-top: 2rem;
-}
-
-.btn-save {
-    background-color: black;
-    color: white;
-    border: 2px solid black;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-save:hover {
-    background-color: white;
-    color: black;
 }
 
 .btn-logout {

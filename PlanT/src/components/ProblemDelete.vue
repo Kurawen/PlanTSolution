@@ -63,7 +63,7 @@ hr {
 }
 
 .delete-window {
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
     width: 300px;
     background-color: white;

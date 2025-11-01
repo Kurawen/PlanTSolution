@@ -63,8 +63,8 @@ export default {
                 <p>Анастейша стил</p>
             </div>
             <div class="detail-buttons">
-                <button class="btn-delete" @click="openDeleteModal">Удалить</button>
-                <button class="btn-close" @click="closeMainModal">Закрыть</button>
+                <button class="btn-black btn-gray-md" @click="openDeleteModal">Удалить</button>
+                <button class="btn-gray btn-gray-md" @click="closeMainModal">Закрыть</button>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@ hr {
 
 .detail-window {
     width: 700px;
-    padding: 15px;
+    padding: 1.5rem;
     border-radius: 5px;
     background-color: white;
     display: flex;

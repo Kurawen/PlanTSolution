@@ -3,86 +3,86 @@ import { ref } from 'vue'
 
 // Данные для чатов
 const chats = ref([
-  {
-    id: 1,
-    name: "Проектный отдел 'А'",
-    lastMessage: "Осталось разобрать дабуди дабудай",
-    time: "10:30",
-    unread: true
-  },
-  {
-    id: 2,
-    name: "Сара",
-    lastMessage: "Отличная работа! Можно еще позязя",
-    time: "5:06",
-    unread: false
-  },
-  {
-    id: 3,
-    name: "Скамеры",
-    lastMessage: "ХОЧЕШЬ СТАТЬ МИЛЛИОНЕРОМ?",
-    time: "Вчера",
-    unread: true
-  },
-  {
-    id: 4,
-    name: "Магнус Карлсен",
-    lastMessage: "Го раз на раз",
-    time: "Вчера",
-    unread: false
-  }
+    {
+        id: 1,
+        name: "Проектный отдел 'А'",
+        lastMessage: "Осталось разобрать дабуди дабудай",
+        time: "10:30",
+        unread: true
+    },
+    {
+        id: 2,
+        name: "Сара",
+        lastMessage: "Отличная работа! Можно еще позязя",
+        time: "5:06",
+        unread: false
+    },
+    {
+        id: 3,
+        name: "Скамеры",
+        lastMessage: "ХОЧЕШЬ СТАТЬ МИЛЛИОНЕРОМ?",
+        time: "Вчера",
+        unread: true
+    },
+    {
+        id: 4,
+        name: "Магнус Карлсен",
+        lastMessage: "Го раз на раз",
+        time: "Вчера",
+        unread: false
+    }
 ])
 
 // Данные для активного чата
 const activeChat = ref({
-  id: 1,
-  name: "Проектный отдел 'Альфа'",
-  messages: [
-    {
-      id: 1,
-      text: "Доброе утро, всем! Просто напоминание о нашем сроке отчета в 3 -м квартале. Давайте проверим, что все разделы готовы.",
-      time: "10:00",
-      isUser: false
-    },
-    {
-      id: 2,
-      text: "Доброе утро, Сара! Я только что закончил собирать данные для финансовых прогнозов. Готов к обзору.",
-      time: "10:05",
-      isUser: true
-    },
-    {
-      id: 3,
-      text: "Я тоже готов! Вскоре я отправлю свой раздел по анализу рынка. Он включает в себя последние конкурентные идеи.",
-      time: "10:15",
-      isUser: false
-    },
-    {
-      id: 4,
-      text: "Отлично. Давайте будем стремиться к тому, чтобы все было объединено в основной документ к концу дня, чтобы завтра мы могли провести окончательную проверку.",
-      time: "10:20",
-      isUser: false
-    },
-    {
-      id: 5,
-      text: "Звучит как план, спасибо, команда!",
-      time: "10:30",
-      isUser: false
-    }
-  ]
+    id: 1,
+    name: "Проектный отдел 'Альфа'",
+    messages: [
+        {
+            id: 1,
+            text: "Доброе утро, всем! Просто напоминание о нашем сроке отчета в 3 -м квартале. Давайте проверим, что все разделы готовы.",
+            time: "10:00",
+            isUser: false
+        },
+        {
+            id: 2,
+            text: "Доброе утро, Сара! Я только что закончил собирать данные для финансовых прогнозов. Готов к обзору.",
+            time: "10:05",
+            isUser: true
+        },
+        {
+            id: 3,
+            text: "Я тоже готов! Вскоре я отправлю свой раздел по анализу рынка. Он включает в себя последние конкурентные идеи.",
+            time: "10:15",
+            isUser: false
+        },
+        {
+            id: 4,
+            text: "Отлично. Давайте будем стремиться к тому, чтобы все было объединено в основной документ к концу дня, чтобы завтра мы могли провести окончательную проверку.",
+            time: "10:20",
+            isUser: true
+        },
+        {
+            id: 5,
+            text: "Звучит как план, спасибо, команда!",
+            time: "10:30",
+            isUser: false
+        }
+    ]
 })
 
 const newMessage = ref('')
 
 const sendMessage = () => {
-  if (newMessage.value.trim()) {
-    activeChat.value.messages.push({
-      id: Date.now(),
-      text: newMessage.value,
-      time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-      isUser: true
-    })
-    newMessage.value = ''
-  }
+    if (newMessage.value.trim()) {
+        activeChat.value.messages.push({
+        id: Date.now(),
+        text: newMessage.value,
+        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        isUser: true
+        })
+        newMessage.value = ''
+    }
 }
 </script>
 
@@ -176,7 +176,7 @@ const sendMessage = () => {
 /* Список чатов */
 .chats-list {
     width: 350px;
-    border-right: 1px solid #e0e0e0;
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
 }
@@ -184,17 +184,17 @@ const sendMessage = () => {
 .chats-list h2 {
     font-family: var(--text-header);
     font-weight: 800;
-    padding: 1.5rem;
+    padding: 1.2rem 1.5rem;
     margin: 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border-color);
     font-size: 1.5rem;
-    color: #333;
+    color: black;
 }
 
 .search-form {
     position: relative;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .search-input {
@@ -203,13 +203,13 @@ const sendMessage = () => {
     border: 1px solid #ddd;
     border-radius: 20px;
     font-size: 0.9rem;
-    background: #f8f9fa;
+    background: var(--bg-color);
 }
 
 .search-input:focus {
     outline: none;
     border-color: #000;
-    background: white;
+    background-color: white;
 }
 
 .search-icon {
@@ -262,7 +262,6 @@ const sendMessage = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.25rem;
 }
 
 .chat-name {
@@ -280,7 +279,7 @@ const sendMessage = () => {
 
 .chat-last-message {
     font-size: 0.85rem;
-    color: #666;
+    color: black;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -313,7 +312,7 @@ const sendMessage = () => {
 
 .cur-chat .chat-header h3 {
     margin: 0;
-    color: #333;
+    color: black;
     font-size: 1.2rem;
 }
 
@@ -343,7 +342,7 @@ const sendMessage = () => {
 }
 
 .message.user-message .message-bubble {
-    background: #007bff;
+    background: rgb(74, 74, 74);
     color: white;
     border: none;
 }

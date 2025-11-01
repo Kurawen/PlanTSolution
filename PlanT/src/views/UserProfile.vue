@@ -75,7 +75,7 @@ const saveProfile = () => {
             <div class="profile-body">
                 <div class="section">
                     <h2 class="section-title">Профиль</h2>
-                    <router-link to="/settings" class="section-change">Редактировать профиль</router-link>
+                    <router-link to="/settings" class="btn-gray btn-gray-md">Редактировать профиль</router-link>
 
                 </div>
                 
@@ -176,38 +176,6 @@ const saveProfile = () => {
     gap: 8px;
 }
 
-.section-change {
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: black;
-    background-color: white;
-    border-radius: 5px;
-    border: 2px solid var(--border-color);
-    padding: 10px 15px;
-}
-
-.section-change:hover {
-    background-color: var(--bg-color);
-}
-
-.btn {
-    background-color: #4a6fa5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn:hover {
-    background-color: #6b8cbc;
-}
-
 .groups-list {
     display: flex;
     flex-direction: column;
@@ -215,8 +183,8 @@ const saveProfile = () => {
 }
 
 .group-item {
-    background-color: var(--bg-color);
-    border-radius: 8px;
+    border: 2px solid black;
+    border-radius: 5px;
     padding: 16px;
     transition: all 0.3s ease;
 }
@@ -265,14 +233,6 @@ const saveProfile = () => {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
 }
 
 </style>
