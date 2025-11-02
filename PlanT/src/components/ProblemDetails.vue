@@ -1,5 +1,5 @@
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ProblemDelete from './ProblemDelete.vue';
 
 export default {
@@ -7,8 +7,23 @@ export default {
     components: {
         ProblemDelete
     },
+    props: {
+        taskId: {
+            type: Number,
+            required: true
+        },
+        tasks: { // Добавляем props для получения списка задач
+            type: Array,
+            default: () => []
+        }
+    },
     setup(props, { emit }) {
         const showDeleteModal = ref(false)
+
+        // Находим текущую задачу по ID
+        const currentTask = computed(() => {
+            return props.tasks.find(task => task.id === props.taskId) || {}
+        })
 
         const openDeleteModal = () => {
             showDeleteModal.value = true
@@ -22,11 +37,19 @@ export default {
             emit('close')
         }
 
+        const confirmDelete = () => {
+            emit('delete-task', props.taskId)
+            closeDeleteModal()
+            closeMainModal()
+        }
+
         return {
             showDeleteModal,
             openDeleteModal,
             closeDeleteModal,
-            closeMainModal
+            closeMainModal,
+            confirmDelete,
+            currentTask
         }
     }
 }
@@ -42,7 +65,7 @@ export default {
             <hr>
             <div class="detail-header">
                 <h6>Заголовок</h6>
-                <p>Подготовить квартальный отчет</p>
+                <p>{{ currentTask.title || 'Название задачи' }}</p>
             </div>
             <div class="detail-desc">
                 <h6>Описание</h6>
@@ -51,20 +74,20 @@ export default {
             <div class="detail-stat">
                 <div class="detail-date">
                     <h6>Крайний срок</h6>
-                    <p>завтра в 7</p>
+                    <p>{{ currentTask.deadline || 'Срок не установлен' }}</p>
                 </div>
                 <div class="detail-status">
                     <h6>Приоритет</h6>
-                    <p>высокий</p>
+                    <p>{{ currentTask.priority || 'не установлен' }}</p>
                 </div>
             </div>
             <div class="detail-creator">
                 <h6>Исполнитель</h6>
-                <p>Анастейша стил</p>
+                <p>{{ currentTask.executor || 'Не назначен' }}</p>
             </div>
             <div class="detail-buttons">
-                <button class="btn-black btn-gray-md" @click="openDeleteModal">Удалить</button>
-                <button class="btn-gray btn-gray-md" @click="closeMainModal">Закрыть</button>
+                <button class="btn-gray btn-md" @click="closeMainModal">Закрыть</button>
+                <button class="btn-black btn-md" @click="openDeleteModal">Удалить</button>
             </div>
         </div>
     </div>
@@ -72,7 +95,7 @@ export default {
     <ProblemDelete 
         v-if="showDeleteModal" 
         @close="closeDeleteModal"
-        @confirm="closeDeleteModal"
+        @confirm="confirmDelete"
     />
 </template>
 

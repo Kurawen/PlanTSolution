@@ -2,15 +2,14 @@ using Entities;
 
 
 
-namespace App.Services
-{
-    public class AuthService
-    {
-        private readonly IConfiguration _configuration;
+namespace App.Services;
 
-        public AuthService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+public class AuthService
+{
+    private readonly IConfiguration _configuration;
+
+    public AuthService(IConfiguration configuration)
+    {
+        _configuration = configuration;
     }
 }

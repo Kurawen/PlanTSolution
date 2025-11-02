@@ -65,8 +65,8 @@ const squadDetails = {
             <p class="squad-count-number">{{ memberCount }} участников</p>
         </div>
         <div class="squad-buttons">
-            <button class="btn-gray btn-gray-md" @click="openSquadOtdelModal">Подробнее</button>
-            <button class="btn-gray btn-gray-md" @click="openRoleCreateModal">Назначить роли</button>
+            <button class="btn-gray btn-md" @click="openSquadOtdelModal">Подробнее</button>
+            <button class="btn-gray btn-md" @click="openRoleCreateModal">Назначить роли</button>
         </div>
     </div>
 

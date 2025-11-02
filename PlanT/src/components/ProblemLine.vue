@@ -114,17 +114,17 @@ const getStatusClass = (status) => {
 }
 .status-completed {
     background: #b5ed5a;
-    background: linear-gradient(90deg, rgba(181, 237, 90, 1) 0%, rgba(0, 212, 255, 1) 100%);
+    background: linear-gradient(90deg, rgb(181, 252, 67) 0%, rgb(23, 204, 240) 100%);
 }
 
 .status-in-progress {
-    background: #db5d14;
-    background: linear-gradient(90deg, rgba(219, 93, 20, 1) 0%, rgba(222, 219, 47, 1) 100%);
+    background: #f50a0a;
+    background: linear-gradient(90deg, rgb(245, 39, 39) 0%, rgb(255, 52, 241) 100%);
 }
 
 .status-todo {
     background: #2ea1ff;
-    background: linear-gradient(90deg, rgba(46, 161, 255, 1) 0%, rgba(191, 38, 222, 1) 100%);
+    background: linear-gradient(90deg, rgb(32, 105, 164) 0%, rgb(194, 60, 221) 100%);
 }
 
 /* Приоритеты */

@@ -8,7 +8,6 @@ export default {
         }
 
         const confirmDelete = () => {
-            // Здесь может быть логика удаления
             emit('confirm')
         }
 
@@ -29,8 +28,8 @@ export default {
         <p>Вы уверены?</p>
         <hr>
         <div class="down-buttons">
-            <button class="button-otmena" @click="closeModal">Отмена</button>
-            <button class="button-delete" @click="confirmDelete">Удалить</button>
+            <button class="btn-gray btn-md" @click="closeModal">Отмена</button>
+            <button class="btn-black btn-md" @click="confirmDelete">Удалить</button>
         </div>
     </div>
 </div>

@@ -96,10 +96,10 @@ const closeModal = () => {
                     </div>
                     
                     <div class="form-actions">
-                        <button type="button" class="btn-gray btn-gray-md" @click="closeModal">
+                        <button type="button" class="btn-gray btn-md" @click="closeModal">
                             Отмена
                         </button>
-                        <button type="submit" class="btn-black btn-gray-md">
+                        <button type="submit" class="btn-black btn-md">
                             Создать задачу
                         </button>
                     </div>

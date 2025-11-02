@@ -79,7 +79,7 @@ const toggleAuth = () => {
                         <h3>Управление задачами</h3>
                     </div>
                     <p class="keys-desc">Управляйте задачами и достигайте высот.</p>
-                    <router-link v-if="showActionButtons" to="/problems" class="btn-gray btn-gray-md">Перейти к задачам</router-link>
+                    <router-link v-if="showActionButtons" to="/problems" class="btn-gray btn-md">Перейти к задачам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -88,7 +88,7 @@ const toggleAuth = () => {
                         <h3>Работа в команде</h3>
                     </div>
                     <p class="keys-desc">Создавайте группы. Создавайте контент.</p>
-                    <router-link v-if="showActionButtons"  to="/squads" class="btn-gray btn-gray-md">Перейти к группам</router-link>
+                    <router-link v-if="showActionButtons"  to="/squads" class="btn-gray btn-md">Перейти к группам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -97,7 +97,7 @@ const toggleAuth = () => {
                         <h3>Коммуникация</h3>
                     </div>
                     <p class="keys-desc">Взаимодействуйте с вашей командой.</p>
-                    <router-link v-if="showActionButtons"  to="/messages" class="btn-gray btn-gray-md">Перейти к сообщениям</router-link>
+                    <router-link v-if="showActionButtons"  to="/messages" class="btn-gray btn-md">Перейти к сообщениям</router-link>
                 </div>
             </div>
         </section>
@@ -106,7 +106,7 @@ const toggleAuth = () => {
         <section v-if="!isAuthenticated" class="prod" >
             <div class="prod-content">
                 <h2 class="prod-title">Готовы улучшить свою продуктивность?</h2>
-                <button class="prod-btn" @click="openAuth">Начать сейчас</button>
+                <button class="btn-black btn-md" @click="openAuth">Начать сейчас</button>
             </div>
         </section>
     </main>
@@ -129,8 +129,8 @@ const toggleAuth = () => {
 /* работа над задачами */
 .tasks {
     background-color: rgb(236, 236, 236);
-    margin: 0 12rem;
-    padding: 3rem 4rem;
+    margin: 0 14rem;
+    padding: 3rem 5rem;
     text-align: center;
     display: flex;
     flex-direction: row;

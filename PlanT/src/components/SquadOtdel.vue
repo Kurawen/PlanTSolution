@@ -84,13 +84,13 @@ const closeInnerModals = () => {
                 <div class="actions-section">
                     <h2>Действия</h2>
                     <div class="actions-grid">
-                        <button class="btn-black btn-gray-md" @click="openInviteModal">
+                        <button class="btn-black btn-md" @click="openInviteModal">
                             <span>Пригласить участника</span>
                         </button>
-                        <button class="btn-black btn-gray-md" @click="openUploadModal">
+                        <button class="btn-black btn-md" @click="openUploadModal">
                             <span>Загрузить файл</span>
                         </button>
-                        <button class="btn-black btn-gray-md" @click="openEditModal">
+                        <button class="btn-black btn-md" @click="openEditModal">
                             <span>Редактировать группу</span>
                         </button>
                     </div>

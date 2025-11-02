@@ -169,8 +169,10 @@ onMounted(() => {
 }
 
 .squad-header h1 {
+    font-family: var(--text-header);
+    font-weight: 800;
+    font-size: 2.3rem;
     margin-bottom: 10px;
-    font-size: 2rem;
     color: black;
 }
 

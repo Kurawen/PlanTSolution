@@ -153,7 +153,7 @@ const openNotifications = () => {
         <!-- подвал -->
         <footer class="dno" v-if="!hideFooter">
             <p>2025</p>
-            <p>© PlanT</p>
+            <p>PlanT</p>
             <a href="https://t.me/myfavoritejumoreski" target="_blank">
                 <img src="../assets/telegram.svg" alt="телеграм" class="main-icon">
             </a>

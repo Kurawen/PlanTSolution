@@ -75,7 +75,7 @@ const saveProfile = () => {
             <div class="profile-body">
                 <div class="section">
                     <h2 class="section-title">Профиль</h2>
-                    <router-link to="/settings" class="btn-gray btn-gray-md">Редактировать профиль</router-link>
+                    <router-link to="/settings" class="btn-black btn-md">Редактировать профиль</router-link>
 
                 </div>
                 
@@ -191,7 +191,6 @@ const saveProfile = () => {
 
 .group-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .group-name {
@@ -202,37 +201,6 @@ const saveProfile = () => {
 .group-role {
     color: grey;
     font-size: 14px;
-}
-
-.edit-form {
-    background-color: #f5f7fa;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 16px;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-.form-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e1e8ed;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.form-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
 }
 
 </style>

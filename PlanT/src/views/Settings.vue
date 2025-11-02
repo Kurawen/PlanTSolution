@@ -1,92 +1,123 @@
-<script>
-export default {
-    name: 'SettingsPage',
-    data() {
-        return {
-            user: {
-                avatar: '',
-                username: 'Анастейша Стил',
-                email: 'nastya50@mail.ru',
-                phone: '+7 (123) 456-78-90'
-            },
-            password: {
-                current: '',
-                new: '',
-                confirm: ''
-            },
-            showModal: false
-        }
-    },
-    methods: {
-        changeAvatar() {
-            // Логика изменения аватара
-            console.log('Смена аватара')
-        },
-        saveChanges() {
-            // Логика сохранения изменений
-            console.log('Сохранение изменений:', {
-                user: this.user,
-                password: this.password
-            })
-        },
-        logout() {
-            // Логика выхода из аккаунта
-            console.log('Выход из аккаунта')
-        },
-        openModal() {
-            this.showModal = true
-        },
-        closeModal() {
-            this.showModal = false
-        }
+<script setup>
+import { ref } from 'vue'
+import defaultAvatar from '../assets/hanna.jpg'
+
+// Данные пользователя
+const user = ref({
+    avatar: defaultAvatar, // Путь к фото по умолчанию
+    username: 'Анастейша Стил',
+    email: 'nastya50@mail.ru',
+    phone: '+7 (123) 456-78-90'
+})
+
+const password = ref({
+    current: '',
+    new: '',
+    confirm: ''
+})
+
+const showModal = ref(false)
+const fileInput = ref(null)
+
+// Методы
+const triggerFileInput = () => {
+    fileInput.value?.click()
+}
+
+const handleFileSelect = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        console.log('Выбран файл:', file.name)
+        changeAvatar(file)
     }
+}
+
+const changeAvatar = (file) => {
+    // Создаем URL для предпросмотра выбранного файла
+    const reader = new FileReader()
+    
+    reader.onload = (e) => {
+        // Обновляем аватар на новый
+        user.value.avatar = e.target.result
+        console.log('Аватар обновлен')
+    }
+    
+    reader.readAsDataURL(file)
+}
+
+const saveChanges = () => {
+    console.log('Сохранение изменений:', {
+        user: user.value,
+        password: password.value
+    })
+    // Логика сохранения изменений
+}
+
+const logout = () => {
+    console.log('Выход из аккаунта')
+    // Логика выхода из аккаунта
+}
+
+const openModal = () => {
+    showModal.value = true
+}
+
+const closeModal = () => {
+    showModal.value = false
 }
 </script>
 
 <template>
     <div class="settings-container">
         <div class="settings-window">
-            <!-- Заголовок -->
             <h1 class="settings-title">Настройки профиля</h1>
 
-            <!-- Основная информация -->
             <section class="settings-section">
                 <h2 class="section-title">Основная информация</h2>
                 
                 <!-- Аватар -->
                 <div class="avatar-section">
                     <div class="avatar-container">
-                        <div class="avatar-placeholder">
-                            <span class="avatar-text"><img src="../assets/hanna.jpg" alt="мама" class="avatar-placeholder"></span>
+                        <div class="avatar-preview">
+                        <img 
+                            :src="user.avatar" 
+                            alt="Аватар пользователя" 
+                            class="avatar-image"
+                        >
                         </div>
-                        <button class="btn-gray btn-gray-md" @click="changeAvatar">
+                        <button type="button" class="btn-gray btn-md" @click="triggerFileInput">
                             Изменить аватар
                         </button>
+                        <input 
+                            type="file" 
+                            ref="fileInput"
+                            class="file-load" 
+                            name="filename"
+                            accept="image/*"
+                            @change="handleFileSelect"
+                            style="display: none"
+                        >
                     </div>
                 </div>
 
-                <!-- Формы основной информации -->
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Имя пользователя</label>
                         <input 
-                            type="name" 
-                            class="form-input"
-                            v-model="user.username"
-                            placeholder="Фамилия Имя"
+                        type="text" 
+                        class="form-input"
+                        v-model="user.username"
+                        placeholder="Фамилия Имя"
                         >
-                        <!-- <div class="input-with-value">
-                            <span class="value-text">{{ user.username }}</span>
-                        </div> -->
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Электронная почта</label>
                         <input 
-                            type="email" 
-                            class="form-input"
-                            v-model="user.email"
-                            placeholder="editor50@mail.ru"
+                        type="email" 
+                        class="form-input"
+                        v-model="user.email"
+                        placeholder="editor50@mail.ru"
                         >
                     </div>
 
@@ -102,7 +133,6 @@ export default {
                 </div>
             </section>
 
-            <!-- Разделитель -->
             <div class="section-divider"></div>
 
             <!-- Смена пароля -->
@@ -142,18 +172,16 @@ export default {
                 </div>
             </section>
 
-            <!-- Кнопки действий -->
             <div class="action-buttons">
-                <button class="btn-black btn-gray-md" @click="saveChanges">
+                <button class="btn-black btn-md" @click="saveChanges">
                     Сохранить изменения
                 </button>
-                <button class="btn-gray btn-gray-md" @click="logout">
+                <button class="btn-red btn-md" @click="logout">
                     Выйти из аккаунта
                 </button>
             </div>
         </div>
 
-        <!-- Модальное окно в разработке -->
         <DevelopingModalWindow v-if="showModal" @close="closeModal"/>
     </div>
 </template>
@@ -200,7 +228,6 @@ export default {
     margin: 2rem 0;
 }
 
-/* Аватар */
 .avatar-section {
     margin-bottom: 2rem;
 }
@@ -211,24 +238,21 @@ export default {
     gap: 1.5rem;
 }
 
-.avatar-placeholder {
+.avatar-preview {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
     border: 2px solid white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.avatar-text {
-    font-size: 2rem;
-    font-weight: 600;
-    color: white;
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Формы */
 .form-grid {
     display: flex;
     flex-direction: column;
@@ -266,43 +290,12 @@ export default {
     color: #999;
 }
 
-/* Поле с текстом вместо инпута */
-.input-with-value {
-    padding: 0.75rem 1rem;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-}
-
-.value-text {
-    font-size: 1rem;
-    color: #333;
-    font-weight: 500;
-}
-
 /* Кнопки действий */
 .action-buttons {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-top: 2rem;
-}
-
-.btn-logout {
-    background-color: white;
-    color: #dc3545;
-    border: 2px solid #dc3545;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: #dc3545;
-    color: white;
 }
 
 </style>

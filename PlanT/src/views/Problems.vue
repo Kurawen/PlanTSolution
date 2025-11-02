@@ -6,6 +6,7 @@ import ProblemLine from '@/components/ProblemLine.vue'
 
 const showModal = ref(false)
 const showModal1 = ref(false)
+const selectedTaskId = ref(null)
 
 const openModal = () => {
     showModal.value = true
@@ -15,12 +16,44 @@ const closeModal = () => {
     showModal.value = false
 }
 
-const openModal1 = () => {
+const openModal1 = (taskId) => {
+    selectedTaskId.value = taskId
     showModal1.value = true
 }
 
 const closeModal1 = () => {
     showModal1.value = false
+    selectedTaskId.value = null
+}
+
+// Функция добавления новой задачи
+const addNewTask = (newTaskData) => {
+    const newTask = {
+        id: tasks.value.length + 1,
+        title: newTaskData.title,
+        deadline: newTaskData.deadline,
+        status: newTaskData.status || 'не начато',
+        priority: newTaskData.priority || 'средний',
+        executor: newTaskData.executor,
+        completed: false
+    }
+    
+    tasks.value.push(newTask)
+    closeModal()
+}
+
+// Функция удаления задачи
+const deleteTask = (taskId) => {
+    const taskIndex = tasks.value.findIndex(task => task.id === taskId)
+    if (taskIndex !== -1) {
+        tasks.value.splice(taskIndex, 1)
+        // Если удаляем выбранную задачу, закрываем модальное окно
+        if (selectedTaskId.value === taskId) {
+            closeModal1()
+        }
+        // Удаляем задачу из выбранных
+        selectedTasks.value.delete(taskId)
+    }
 }
 
 // Данные для календаря
@@ -75,22 +108,6 @@ const tasks = ref([
         completed: false
     }
 ])
-
-// Функция добавления новой задачи
-const addNewTask = (newTaskData) => {
-    const newTask = {
-        id: tasks.value.length + 1,
-        title: newTaskData.title,
-        deadline: newTaskData.deadline,
-        status: newTaskData.status || 'к выполнению',
-        priority: newTaskData.priority || 'средний',
-        executor: newTaskData.executor,
-        completed: false
-    }
-    
-    tasks.value.push(newTask)
-    closeModal()
-}
 
 const activeTab = ref('all')
 const selectedTasks = ref(new Set())
@@ -239,7 +256,7 @@ const getSortIcon = (field) => {
             <!-- Заголовок -->
             <div class="problems-title">
                 <h1>Мои задачи</h1>
-                <button class="btn-black btn-black-md" @click="openModal">+ Новая задача</button>
+                <button class="btn-black btn-md" @click="openModal">+ Новая задача</button>
             </div>
 
             <!-- Календарь -->
@@ -320,7 +337,7 @@ const getSortIcon = (field) => {
                         :task="task"
                         :selected="selectedTasks.has(task.id)"
                         @toggle-selection="toggleTaskSelection(task.id)"
-                        @open-details="openModal1"
+                        @open-details="() => openModal1(task.id)"
                     />
                 </div>
             </section>
@@ -334,7 +351,13 @@ const getSortIcon = (field) => {
         @create-task="addNewTask"
     />
     
-    <ProblemDetails v-if="showModal1" @close="closeModal1"/>
+    <ProblemDetails 
+        v-if="showModal1" 
+        @close="closeModal1"
+        @delete-task="deleteTask"
+        :task-id="selectedTaskId"
+        :tasks="tasks"
+    />
 </template>
 
 <style scoped>
@@ -361,6 +384,8 @@ const getSortIcon = (field) => {
 }
 
 .problems-title h1 {
+    font-family: var(--text-header);
+    font-weight: 800;
     font-size: 2rem;
     color: black;
     margin: 0;
@@ -400,7 +425,6 @@ const getSortIcon = (field) => {
     margin: 0;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #333;
 }
 
 .calendar-nav {
@@ -425,7 +449,6 @@ const getSortIcon = (field) => {
 .calendar-day-header {
     text-align: center;
     font-weight: 600;
-    color: #666;
     padding: 0.5rem;
     font-size: 0.9rem;
 }
@@ -475,7 +498,7 @@ const getSortIcon = (field) => {
 
 .problems-type button:not(.active):hover {
     background: var(--bg-color);
-    color: #333;
+    color: #e21d1d;
 }
 
 /* Таблица задач */
