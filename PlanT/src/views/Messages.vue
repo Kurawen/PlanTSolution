@@ -84,6 +84,21 @@ const sendMessage = () => {
         newMessage.value = ''
     }
 }
+
+const fileInput = ref(null)
+
+// Методы
+const triggerFileInput = () => {
+    fileInput.value?.click()
+}
+
+const handleFileSelect = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        console.log('Выбран файл:', file.name)
+        changeAvatar(file)
+    }
+}
 </script>
 
 <template>
@@ -145,6 +160,18 @@ const sendMessage = () => {
                         placeholder="Введите сообщение..." 
                         class="message-input"
                         @keypress.enter="sendMessage"
+                    >
+                    <button type="button" class="btn-gray btn-md" @click="triggerFileInput">
+                        прикрепить файл
+                    </button>
+                    <input 
+                        type="file" 
+                        ref="fileInput"
+                        class="file-load" 
+                        name="filename"
+                        accept="image/*"
+                        @change="handleFileSelect"
+                        style="display: none"
                     >
                     <button @click="sendMessage" class="send-button">
                         Отправить

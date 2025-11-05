@@ -56,6 +56,14 @@ const deleteTask = (taskId) => {
     }
 }
 
+// Функция обновления задачи
+const updateTask = (updateData) => {
+    const taskIndex = tasks.value.findIndex(task => task.id === updateData.taskId)
+    if (taskIndex !== -1) {
+        tasks.value[taskIndex][updateData.field] = updateData.value
+    }
+}
+
 // Данные для календаря
 const currentDate = ref(new Date())
 const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
@@ -109,6 +117,27 @@ const tasks = ref([
     }
 ])
 
+// Функция для получения задач на конкретную дату
+const getTasksForDate = (day) => {
+    if (!day) return []
+    
+    const currentMonth = currentDate.value.getMonth() + 1
+    const currentYear = currentDate.value.getFullYear()
+    const dateString = `${day.toString().padStart(2, '0')}.${currentMonth.toString().padStart(2, '0')}.${currentYear}`
+    
+    return tasks.value.filter(task => task.deadline === dateString)
+}
+
+// Функция для получения класса приоритета
+const getPriorityColor = (priority) => {
+    switch (priority) {
+        case 'высокий': return 'task-priority-high'
+        case 'средний': return 'task-priority-medium'
+        case 'низкий': return 'task-priority-low'
+        default: return ''
+    }
+}
+
 const activeTab = ref('all')
 const selectedTasks = ref(new Set())
 
@@ -118,7 +147,8 @@ const getDaysInMonth = (date) => {
 }
 
 const getFirstDayOfMonth = (date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+    return firstDay === 0 ? 6 : firstDay - 1 // Приводим к формату Пн=0, Вс=6
 }
 
 const generateCalendarDays = () => {
@@ -282,9 +312,20 @@ const getSortIcon = (field) => {
                         v-for="(day, index) in calendarDays" 
                         :key="index" 
                         class="calendar-day"
-                        :class="{ 'empty': day === null }"
+                        :class="{ 'empty': day === null, 'has-tasks': day && getTasksForDate(day).length > 0 }"
                     >
-                        {{ day }}
+                        <div class="day-number">{{ day }}</div>
+                        <div class="day-tasks">
+                            <div 
+                                v-for="task in getTasksForDate(day)" 
+                                :key="task.id"
+                                class="calendar-task"
+                                :class="getPriorityColor(task.priority)"
+                                :title="task.title"
+                            >
+                                {{ task.title }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -355,6 +396,7 @@ const getSortIcon = (field) => {
         v-if="showModal1" 
         @close="closeModal1"
         @delete-task="deleteTask"
+        @update-task="updateTask"
         :task-id="selectedTaskId"
         :tasks="tasks"
     />
