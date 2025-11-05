@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Drawing;
 using System.Net.Http;
-using App.Services;
+// using App.Services;
 using Entities;
 using App.Api;
 using System;
@@ -17,13 +17,19 @@ using System;
 // база для api
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    builder.Logging.AddConsole();
+});
+
 // конфигурация бд(смотри appsettings.json)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // базовые сервисы
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<AuthService>();
+// builder.Services.AddScoped<AuthService>();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
@@ -166,5 +172,47 @@ app.MapGroup("/user_profiles").MapUserProfileApi();
 
 app.MapGroup("/users").MapUserApi().RequireAuthorization();
 // app.MapGroup("/roles").MapRolesApi().RequireAuthorization(a => a.RequireRole("Admin"));
+
+// app.Run(async (context) =>
+// {
+//     app.Logger.LogInformation($"Processing request {context.Request.Path}");
+
+//     await context.Response.WriteAsync("егор пидорас");
+// });
+
+// app.Map("/hello", (ILogger<Program> logger) =>
+// {
+//     logger.LogInformation($"Path: /hello  Time: {DateTime.Now.ToLongTimeString()}");
+
+//     return "piski pipiski";
+// });
+
+
+
+// провайдеры: 
+// дебаг 
+// консоль 
+// общее для всех
+// ошибки
+
+app.Logger.LogInformation("starting");
+app.MapGet("/", () => "msg");
+app.Logger.LogInformation("ending");
+
+// app.MapGet("/Test", async (ILogger<Program> logger, HttpResponse response) => {
+//     logger.LogInformation("testing logging");
+//     await response.WriteAsync("bebebe");
+// });
+
+app.Run(async (context) =>
+{
+    var path = context.Request.Path;
+    app.Logger.LogCritical($"LogCritical {path}");
+    app.Logger.LogError($"LogError {path}");
+    app.Logger.LogInformation($"LogInformation {path}");
+    app.Logger.LogWarning($"LogWarning {path}");
+ 
+    await context.Response.WriteAsync("Hello World!");
+});
 
 app.Run();
