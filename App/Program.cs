@@ -101,13 +101,13 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
     if (user is null)
         return Results.Unauthorized();
     // Ищем пароль пользователя в отдельной таблице
-    var userPassword = await db.User_Passwords
-        .FirstOrDefaultAsync(up => up.UserId == user.Id);
+    var userPassword = await db.UserPasswords
+        .FirstOrDefaultAsync(up => up.User_id == user.Id);
 
-    if (userPassword is null || userPassword.Password is null)
+    if (userPassword is null || userPassword.Hash_password is null)
         return Results.Unauthorized();
 
-    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(password));
+    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(userPassword.Hash_password));
     string hex = BitConverter.ToString(hash).Replace("-", "");
 
     // if (hex != user.Password.Password)
@@ -115,7 +115,7 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
 
     var claims = new List<Claim>
     {
-        new(ClaimTypes.NameIndentifier, user.Id.ToString()),
+        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new(ClaimTypes.Name, user.First_Name),
         new(ClaimTypes.Email, user.Email)
     };
@@ -141,20 +141,7 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
     }); 
 });
 
-public class LoginRequest
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
 
-}
-
-public class AuthResponse
-{
-    public string Token { get; set; }
-    public int UserId { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-}
 // app.Map("/data", [Authorize] (HttpContent context) => $"Bebrou");
 
 // регистрации api
@@ -173,6 +160,9 @@ app.MapGroup("/user_profiles").MapUserProfileApi();
 app.MapGroup("/users").MapUserApi().RequireAuthorization();
 // app.MapGroup("/roles").MapRolesApi().RequireAuthorization(a => a.RequireRole("Admin"));
 
+
+
+
 // app.Run(async (context) =>
 // {
 //     app.Logger.LogInformation($"Processing request {context.Request.Path}");
@@ -186,7 +176,6 @@ app.MapGroup("/users").MapUserApi().RequireAuthorization();
 
 //     return "piski pipiski";
 // });
-
 
 
 // провайдеры: 
@@ -216,3 +205,19 @@ app.Run(async (context) =>
 });
 
 app.Run();
+
+
+public class LoginRequest
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+
+}
+
+public class AuthResponse
+{
+    public string Token { get; set; }
+    public int UserId { get; set; }
+    public string Username { get; set; }
+    public string Email { get; set; }
+}
