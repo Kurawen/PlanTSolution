@@ -65,17 +65,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // база для приложения
 var app = builder.Build();
 
-// все для токенов
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// все для токенов
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+
 
 // ¯\_(ツ)_/¯ - не трогать
 app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
@@ -85,13 +87,19 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 // генерация токена для пользователя (для логина)
-app.MapPost("/login/{username}", async (string username, [FromBody] string password, AppDbContext db) =>
+app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest request, AppDbContext db) =>
 {
     var user = await
-        db.Users.FirstOrDefaultAsync(u => u.First_Name == username);
+        db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-    // if (user is null || user.Password?.Password is null)
-    //     return Results.Unauthorized();
+    if (user is null)
+        return Results.Unauthorized();
+    // Ищем пароль пользователя в отдельной таблице
+    var userPassword = await db.User_Passwords
+        .FirstOrDefaultAsync(up => up.UserId == user.Id);
+
+    if (userPassword is null || userPassword.Password is null)
+        return Results.Unauthorized();
 
     byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(password));
     string hex = BitConverter.ToString(hash).Replace("-", "");
@@ -101,8 +109,9 @@ app.MapPost("/login/{username}", async (string username, [FromBody] string passw
 
     var claims = new List<Claim>
     {
-        new(ClaimTypes.Name, username),
-        // new("id", user.Id.ToString())
+        new(ClaimTypes.NameIndentifier, user.Id.ToString()),
+        new(ClaimTypes.Name, user.First_Name),
+        new(ClaimTypes.Email, user.Email)
     };
 
     // if (user.Roles?.Any() == true)
@@ -118,10 +127,28 @@ app.MapPost("/login/{username}", async (string username, [FromBody] string passw
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
             SecurityAlgorithms.HmacSha256));
 
-    return Results.Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+    return Results.Ok(new {
+        Token = new JwtSecurityTokenHandler().WriteToken(jwt),
+        UserId = user.Id,
+        Username = user.First_Name,
+        Email = user.Email,
+    }); 
 });
 
+public class LoginRequest
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
 
+}
+
+public class AuthResponse
+{
+    public string Token { get; set; }
+    public int UserId { get; set; }
+    public string Username { get; set; }
+    public string Email { get; set; }
+}
 // app.Map("/data", [Authorize] (HttpContent context) => $"Bebrou");
 
 // регистрации api
