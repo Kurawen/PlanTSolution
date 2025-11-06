@@ -86,7 +86,7 @@ app.UseAuthorization();
 
 
 // ¯\_(ツ)_/¯ - не трогать
-app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
+// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
@@ -150,7 +150,7 @@ app.MapPost("/register", async ([FromBody] RegisterRequest request, AppDbContext
     var newUser = new User
     {
         Email = request.Email,
-        CreatedAt = DateTime.UtcNow
+        Created_at = DateTime.UtcNow
     };
 
     db.Users.Add(newUser);
@@ -159,14 +159,14 @@ app.MapPost("/register", async ([FromBody] RegisterRequest request, AppDbContext
     byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
     string hex = BitConverter.ToString(hash).Replace("-", "");
 
-    var userPassword = new UserPassword
+    var userPassword = new User_password
     {
-        UserId = newUser.Id,
-        Password = hex,
-        CreatedAt = DateTime.UtcNow
+        Id = newUser.Id,
+        Hash_password = hex,
+        Created_at = DateTime.UtcNow
     };
 
-    db.User_password.Add(userPassword);
+    db.UserPasswords.Add(userPassword);
     await db.SaveChangesAsync();
 
     return Results.Ok("Новый пользователь зарегистрирован");
@@ -188,11 +188,6 @@ app.MapGroup("/problems").MapTaskApi();
 app.MapGroup("/users").MapUserApi();
 app.MapGroup("/user_passwords").MapUserPasswordApi();
 app.MapGroup("/user_profiles").MapUserProfileApi();
-
-app.MapGroup("/users").MapUserApi().RequireAuthorization();
-// app.MapGroup("/roles").MapRolesApi().RequireAuthorization(a => a.RequireRole("Admin"));
-
-
 
 
 // app.Run(async (context) =>
@@ -216,25 +211,25 @@ app.MapGroup("/users").MapUserApi().RequireAuthorization();
 // общее для всех
 // ошибки
 
-app.Logger.LogInformation("starting");
-app.MapGet("/", () => "msg");
-app.Logger.LogInformation("ending");
+// app.Logger.LogInformation("starting");
+// app.MapGet("/", () => "msg");
+// app.Logger.LogInformation("ending");
 
 // app.MapGet("/Test", async (ILogger<Program> logger, HttpResponse response) => {
 //     logger.LogInformation("testing logging");
 //     await response.WriteAsync("bebebe");
 // });
 
-app.Run(async (context) =>
-{
-    var path = context.Request.Path;
-    app.Logger.LogCritical($"LogCritical {path}");
-    app.Logger.LogError($"LogError {path}");
-    app.Logger.LogInformation($"LogInformation {path}");
-    app.Logger.LogWarning($"LogWarning {path}");
+// app.Run(async (context) =>
+// {
+//     var path = context.Request.Path;
+//     app.Logger.LogCritical($"LogCritical {path}");
+//     app.Logger.LogError($"LogError {path}");
+//     app.Logger.LogInformation($"LogInformation {path}");
+//     app.Logger.LogWarning($"LogWarning {path}");
  
-    await context.Response.WriteAsync("Hello World!");
-});
+//     await context.Response.WriteAsync("если ты это читаешь, то все ок");
+// });
 
 app.Run();
 
