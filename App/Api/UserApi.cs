@@ -3,7 +3,7 @@ using Entities;
 
 namespace App.Api
 {
-    public static class User_Api
+    public static class UserApi
     {
         public static RouteGroupBuilder MapUserApi(this RouteGroupBuilder api)
         {
@@ -42,7 +42,7 @@ namespace App.Api
                 db.Users.Add(newUser);
                 await db.SaveChangesAsync();
                 return Results.Created($"/users/{newUser.Id}", newUser);
-            });
+            }).RequireAuthorization();
 
             // GET - получить всех пользователей
             api.MapGet("/", async (AppDbContext db) => await db.Users.ToListAsync());

@@ -107,11 +107,11 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
     if (userPassword is null || userPassword.Hash_password is null)
         return Results.Unauthorized();
 
-    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(userPassword.Hash_password));
+    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
     string hex = BitConverter.ToString(hash).Replace("-", "");
 
-    // if (hex != user.Password.Password)
-    //     return Results.Unauthorized();
+     if (hex != userPassword.Hash_password)
+         return Results.Unauthorized();
 
     var claims = new List<Claim>
     {
@@ -136,23 +136,55 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
     return Results.Ok(new {
         Token = new JwtSecurityTokenHandler().WriteToken(jwt),
         UserId = user.Id,
-        Username = user.First_Name,
-        Email = user.Email,
+        Email = user.Email
     }); 
+});
+
+app.MapPost("/register", async ([FromBody] RegisterRequest request, AppDbContext db) =>
+{
+    var existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+    if (existingUser != null)
+        return Results.BadRequest("Пользователь с этим Email уже существует!");
+
+    var newUser = new User
+    {
+        Email = request.Email,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    db.Users.Add(newUser);
+    await db.SaveChangesAsync();
+
+    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
+    string hex = BitConverter.ToString(hash).Replace("-", "");
+
+    var userPassword = new UserPassword
+    {
+        UserId = newUser.Id,
+        Password = hex,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    db.User_password.Add(userPassword);
+    await db.SaveChangesAsync();
+
+    return Results.Ok("Новый пользователь зарегистрирован");
+
+
+
 });
 
 
 // app.Map("/data", [Authorize] (HttpContent context) => $"Bebrou");
 
 // регистрации api
-app.MapGroup("/auth").MapAuthApi();
 app.MapGroup("/channels").MapChannelApi();
 app.MapGroup("/groups").MapGroupApi();
 app.MapGroup("/group_members").MapGroupMemberApi();
 app.MapGroup("/messages").MapMessageApi();
 app.MapGroup("/notifications").MapNotificationApi();
 app.MapGroup("/problems").MapTaskApi();
-// app.MapGroup("/task_comments").MapTaskCommentApi();
 app.MapGroup("/users").MapUserApi();
 app.MapGroup("/user_passwords").MapUserPasswordApi();
 app.MapGroup("/user_profiles").MapUserProfileApi();
@@ -207,6 +239,12 @@ app.Run(async (context) =>
 app.Run();
 
 
+public class RegisterRequest
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+
+}
 public class LoginRequest
 {
     public string Email { get; set; }

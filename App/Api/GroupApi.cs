@@ -3,7 +3,7 @@ using Entities;
 
 namespace App.Api
 {
-    public static class Group_Api
+    public static class GroupApi
     {
         public static RouteGroupBuilder MapGroupApi(this RouteGroupBuilder api)
         {

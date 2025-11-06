@@ -8,11 +8,11 @@ namespace Entities
         public Guid Id { get; set; }
 
         [MaxLength(36)]
-        [Required]
+        
         public string First_Name { get; set; }
 
         [MaxLength(36)]
-        [Required]
+        
         public string Last_Name { get; set; }
 
         [Required]
