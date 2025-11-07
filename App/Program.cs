@@ -13,6 +13,7 @@ using System.Net.Http;
 using Entities;
 using App.Api;
 using System;
+using App.Services;
 
 // база для api
 var builder = WebApplication.CreateBuilder(args);
@@ -71,6 +72,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // база для приложения
 var app = builder.Build();
 
+// Авто логирование всех Api кроме /login
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("===> Дима говорит {Method} с такими данными {Path}",
+        context.Request.Method, context.Request.Path);
+
+    var startTime = DateTime.UtcNow;
+
+    avait next();
+
+    var elapsed = DateTime.UtcNow - startTime;
+
+    logger.LogInformation("<=== Дима получает {StatusCode} и кончает на Фомину за {ElapsedMs}ms",
+        context.Response.StatusCode, elapsed.TotalMilliseconds);
+
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -95,49 +114,99 @@ app.MapControllers();
 // генерация токена для пользователя (для логина)
 app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest request, AppDbContext db) =>
 {
+    logger.LogInformation("Login attemt for: {Email}", request.Email);
     var user = await
         db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-    if (user is null)
-        return Results.Unauthorized();
-    // Ищем пароль пользователя в отдельной таблице
-    var userPassword = await db.UserPasswords
-        .FirstOrDefaultAsync(up => up.User_id == user.Id);
 
-    if (userPassword is null || userPassword.Hash_password is null)
-        return Results.Unauthorized();
+    // Теперь с логированием
+    try
+    {
+        if (user is null)
+            return Results.Unauthorized();
+        // Ищем пароль пользователя в отдельной таблице
+        var userPassword = await db.UserPasswords
+            .FirstOrDefaultAsync(up => up.User_id == user.Id);
 
-    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
-    string hex = BitConverter.ToString(hash).Replace("-", "");
+        if (userPassword is null || userPassword.Hash_password is null)
+            return Results.Unauthorized();
 
-     if (hex != userPassword.Hash_password)
-         return Results.Unauthorized();
+        byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
+        string hex = BitConverter.ToString(hash).Replace("-", "");
 
-    var claims = new List<Claim>
+        if (hex != userPassword.Hash_password)
+            return Results.Unauthorized();
+
+        var claims = new List<Claim>
     {
         new(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new(ClaimTypes.Name, user.First_Name),
         new(ClaimTypes.Email, user.Email)
     };
 
-    // if (user.Roles?.Any() == true)
-    //     foreach (var role in user.Roles!.Select(r => r.Role!.Name))
-    //         claims.Add(new(ClaimTypes.Role, role));
+        // if (user.Roles?.Any() == true)
+        //     foreach (var role in user.Roles!.Select(r => r.Role!.Name))
+        //         claims.Add(new(ClaimTypes.Role, role));
 
-    var jwt = new JwtSecurityToken(
-        issuer: builder.Configuration["Jwt:Issuer"],
-        audience: builder.Configuration["Jwt:Audience"],
-        claims: claims,
-        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
-        signingCredentials: new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
-            SecurityAlgorithms.HmacSha256));
+        var jwt = new JwtSecurityToken(
+            issuer: builder.Configuration["Jwt:Issuer"],
+            audience: builder.Configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
+            signingCredentials: new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+                SecurityAlgorithms.HmacSha256));
+        logger.LogInformation("Succeful login for user: {UserId}", user.Id);
 
-    return Results.Ok(new {
-        Token = new JwtSecurityTokenHandler().WriteToken(jwt),
-        UserId = user.Id,
-        Email = user.Email
-    }); 
+        return Results.Ok(new
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(jwt),
+            UserId = user.Id,
+            Email = user.Email
+        });
+
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Login failed for: {Email}", request.Email);
+        return Results.Unauthorized();
+    }
+    //if (user is null)
+    //    return Results.Unauthorized();
+    //// Ищем пароль пользователя в отдельной таблице
+    //var userPassword = await db.UserPasswords
+    //    .FirstOrDefaultAsync(up => up.User_id == user.Id);
+
+    //if (userPassword is null || userPassword.Hash_password is null)
+    //    return Results.Unauthorized();
+
+    //byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(request.Password));
+    //string hex = BitConverter.ToString(hash).Replace("-", "");
+
+    // if (hex != userPassword.Hash_password)
+    //     return Results.Unauthorized();
+
+    //var claims = new List<Claim>
+    //{
+    //    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+    //    new(ClaimTypes.Name, user.First_Name),
+    //    new(ClaimTypes.Email, user.Email)
+    //};
+
+    //// if (user.Roles?.Any() == true)
+    ////     foreach (var role in user.Roles!.Select(r => r.Role!.Name))
+    ////         claims.Add(new(ClaimTypes.Role, role));
+
+    //var jwt = new JwtSecurityToken(
+    //    issuer: builder.Configuration["Jwt:Issuer"],
+    //    audience: builder.Configuration["Jwt:Audience"],
+    //    claims: claims,
+    //    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
+    //    signingCredentials: new SigningCredentials(
+    //        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+    //        SecurityAlgorithms.HmacSha256));
+
+
 });
 
 app.MapPost("/register", async ([FromBody] RegisterRequest request, AppDbContext db) =>
@@ -174,7 +243,11 @@ app.MapPost("/register", async ([FromBody] RegisterRequest request, AppDbContext
 
 
 });
-
+app.MapPost("/backup", async (AppDbContext db, BackupDatabaseService backupService) =>
+{
+    await backupService.CreateBackupAsync(db);
+    return Results.Ok("Резевное копирование БД");
+});
 
 // app.Map("/data", [Authorize] (HttpContent context) => $"Bebrou");
 

@@ -11,11 +11,7 @@ namespace App.Api
             api.MapPost("/", async (User user, AppDbContext db) =>
             {
                 // Валидация обязательных полей
-                if (string.IsNullOrEmpty(user.First_Name))
-                    return Results.BadRequest("First name is required");
 
-                if (string.IsNullOrEmpty(user.Last_Name))
-                    return Results.BadRequest("Last name is required");
 
                 if (string.IsNullOrEmpty(user.Email))
                     return Results.BadRequest("Email is required");
@@ -33,8 +29,7 @@ namespace App.Api
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
-                    First_Name = user.First_Name.Trim(),
-                    Last_Name = user.Last_Name.Trim(),
+
                     Email = user.Email.ToLower().Trim(),
                     Created_at = DateTime.UtcNow
                 };
@@ -107,12 +102,7 @@ namespace App.Api
                 var user = await db.Users.FindAsync(id);
                 if (user is null) return Results.NotFound();
 
-                // Валидация обязательных полей
-                if (string.IsNullOrEmpty(userData.First_Name))
-                    return Results.BadRequest("First name is required");
 
-                if (string.IsNullOrEmpty(userData.Last_Name))
-                    return Results.BadRequest("Last name is required");
 
                 if (string.IsNullOrEmpty(userData.Email))
                     return Results.BadRequest("Email is required");
