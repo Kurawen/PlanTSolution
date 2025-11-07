@@ -76,16 +76,16 @@ var app = builder.Build();
 app.Use(async (context, next) =>
 {
     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("===> Дима говорит {Method} с такими данными {Path}",
+    logger.LogInformation("===> Действие {Method} - данные: {Path}",
         context.Request.Method, context.Request.Path);
 
     var startTime = DateTime.UtcNow;
 
-    avait next();
+    await next();
 
     var elapsed = DateTime.UtcNow - startTime;
 
-    logger.LogInformation("<=== Дима получает {StatusCode} и кончает на Фомину за {ElapsedMs}ms",
+    logger.LogInformation("<=== Ошибка {StatusCode} - не удалось получить доступ - время работы: {ElapsedMs} ms",
         context.Response.StatusCode, elapsed.TotalMilliseconds);
 
 });
@@ -105,7 +105,7 @@ app.UseAuthorization();
 
 
 // ¯\_(ツ)_/¯ - не трогать
-// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
+app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
 
 // база для api
 app.UseHttpsRedirection();
@@ -114,7 +114,7 @@ app.MapControllers();
 // генерация токена для пользователя (для логина)
 app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest request, AppDbContext db) =>
 {
-    logger.LogInformation("Login attemt for: {Email}", request.Email);
+    app.Logger.LogInformation("Login attemt for: {Email}", request.Email);
     var user = await
         db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
@@ -156,7 +156,7 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
             signingCredentials: new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
                 SecurityAlgorithms.HmacSha256));
-        logger.LogInformation("Succeful login for user: {UserId}", user.Id);
+        app.Logger.LogInformation("Успешный вход для пользователя: {UserId}", user.Id);
 
         return Results.Ok(new
         {
@@ -168,7 +168,7 @@ app.MapPost("/login/{username}", async (string username, [FromBody] LoginRequest
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Login failed for: {Email}", request.Email);
+        app.Logger.LogError(ex, "Ошибка при входе: {Email}", request.Email);
         return Results.Unauthorized();
     }
     //if (user is null)

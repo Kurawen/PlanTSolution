@@ -1,44 +1,51 @@
-﻿namespace App.Services
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Json;
+using System.IO;
+namespace App.Services;
+
+public class BackupDatabaseService
 {
-    public class BackupDatabaseService
+    private readonly ILogger<BackupDatabaseService> _logger;
+
+    public BackupDatabaseService(ILogger<BackupDatabaseService> logger)
     {
-        private readonly ILogger<BackupDatabaseService> _logger;
+        _logger = logger;
+    }
 
-        public BackupDatabaseService(ILogger<BackupDatabaseService> logger)
+    public async Task CreateBackupAsync(AppDbContext db)
+    {
+        var backupDir = "backups";
+
+        var backupFile = $"backup/buckup_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+        try
         {
-            _logger = logger;
-        }
-
-        public async Task CreateBackupAsync(AppDbContext db)
-        {
-            var backupDir = "backups";
-
-            var backupFile = $"backup/buckup_{DateTime.Now:yyyyMMdd_HHmmss}.json";
-            try
+            var backupData = new
             {
-                var backupData = new
-                {
-                    Timestamp = DateTime.UtcNow,
-                    User = await db.User.ToListAsync(),
-                    UserPassword = db.User_password.ToListAsync(),
-                    Messages = await db.Message.ToListAsync(),
-                    Problems = await db.Problem.ToListAsync(),
-                    Chanels = await db.Chanel.ToListAsync(),
-                    Group = await db.Group.ToListAsync(),
-                    GroupMember = await db.Group_member.ToListAsync()
-                };
+                Timestamp = DateTime.UtcNow,
+                User = await db.Users.ToListAsync(),
+                UserPassword = db.UserPasswords.ToListAsync(),
+                Messages = await db.Messages.ToListAsync(),
+                Problems = await db.Problem.ToListAsync(),
+                Chanels = await db.Channels.ToListAsync(),
+                Group = await db.Groups.ToListAsync(),
+                GroupMember = await db.GroupMembers.ToListAsync()
+            };
 
-                var json = System.Text.Json.JsonSerializer.Serialize(backupData, new System.Text.JsonJsonSerializerOptions
-                {
-                    WriteIntented = true
-                });
-                await backupFile.WriteAllTextAsync(backupFile, json);
+            JsonSerializerOptions json = new()
+            {
+                WriteIndented = true
+            };
+            string jsonString = JsonSerializer.Serialize(json, json);
+            await File.WriteAllTextAsync(backupFile, jsonString);
 
-                _logger.LogInformation("Димка создал бэкап БД и назвал его в честь Даты свидания с Анной: {BacupFile}", backupFile);
-            }
-            catch (Exception  ex) {
-                _logger.LogError(ex, "Димка не смог создать бэкап [свидания с Фоминой не было:(]");
-                throw;
+            _logger.LogInformation("Димка создал бэкап БД и назвал его в честь Даты свидания с Анной: {backupFile}", backupFile);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Димка не смог создать бэкап [свидания с Фоминой не было:(]");
+            throw;
         }
     }
 }
