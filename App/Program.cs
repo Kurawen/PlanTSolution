@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Drawing;
 using System.Net.Http;
+using Microsoft.Extensions.Caching.Memory;
 // using App.Services;
 using Entities;
 using App.Api;
@@ -30,10 +31,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // базовые сервисы
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddScoped<AuthService>();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<BackupDatabaseService>();
+builder.Services.AddScoped<CacheService>();
 
 // ValidateIssuer: указывает, будет ли валидироваться издатель при валидации токена
 // ValidateAudience: указывает, будет ли валидироваться потребитель токена
@@ -235,10 +239,28 @@ app.MapGet("/debug/all-users", async (AppDbContext db) =>
     return Results.Ok(usersWithPasswords);
 });
 
-app.MapPost("/backup", async (AppDbContext db, BackupDatabaseService backupService) =>
+app.MapPost("/backup", async (AppDbContext db, [FromServices] BackupDatabaseService backupService) =>
 {
-    await backupService.CreateBackupAsync(db);
-    return Results.Ok("Резевное копирование БД");
+    try
+    {
+        var backupFile = await backupService.CreateBackupAsync(db);
+        return Results.Ok(new { 
+            Message = "Резервное копирование БД прошло успешно",
+            BackupFile = backupFile,
+            Timestamp = DateTime.UtcNow
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Ошибка при создании резервной копии БД: {ex.Message}");
+    }
+});
+
+app.MapGet("/cache/users/{id}", async (Guid id, [FromServices] CacheService cacheService) =>
+{
+    User? user = await cacheService.GetUser(id);
+    if (user != null) return Results.Ok($"Пользователь={user.Email}  Id={user.Id}");
+    return Results.NotFound("Пользователь не найден");
 });
 
 // регистрации api

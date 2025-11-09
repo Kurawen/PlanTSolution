@@ -1,0 +1,54 @@
+﻿{
+  "Timestamp": "2025-11-09T17:50:37.5381555Z",
+  "User": [
+    {
+      "Id": "d58c6168-a7c7-421c-b342-91d3c05fc5ce",
+      "First_Name": null,
+      "Last_Name": null,
+      "Email": "baa@mail.ru",
+      "Created_at": "2025-11-09T10:52:24.450881Z"
+    },
+    {
+      "Id": "c14957fd-13c7-4229-bbb4-0e7248abdfb1",
+      "First_Name": null,
+      "Last_Name": null,
+      "Email": "milashka@mail.ru",
+      "Created_at": "2025-11-09T13:20:43.477758Z"
+    },
+    {
+      "Id": "e21d45b6-a1dc-4848-b4ca-ee44762238d4",
+      "First_Name": null,
+      "Last_Name": null,
+      "Email": "test@mail.ru",
+      "Created_at": "2025-11-09T13:38:36.161977Z"
+    }
+  ],
+  "UserPassword": [
+    {
+      "Id": "629d3f18-973c-4259-b668-33c9369a1c6d",
+      "User_id": "d58c6168-a7c7-421c-b342-91d3c05fc5ce",
+      "Hash_password": "11BFEBC7731CA3753FB7A8EE33C50D29BD61E784F4E1DD3EC2B758D3BC6CF1B1B46837BDEB52A11B58B2C2B2F017A84FE74DD5625BA89D12D9B0ECEE5EDA9353",
+      "Created_at": "2025-11-09T10:52:24.549976Z",
+      "Updated_at": null
+    },
+    {
+      "Id": "4f894829-e4db-4256-9cd7-e70b9177b6d2",
+      "User_id": "c14957fd-13c7-4229-bbb4-0e7248abdfb1",
+      "Hash_password": "FD25766B4D7BF0C76AF8B3D4CF122BC130D836C17161A25736FDDA8DAD5B2EDD4C7AF3CD20A446C199544E677B7656487E8E26DE780B8F9E55F42BCF0CC23DA3",
+      "Created_at": "2025-11-09T13:20:43.540583Z",
+      "Updated_at": null
+    },
+    {
+      "Id": "08dcb499-e36b-45fe-9118-eef6ddc1ba21",
+      "User_id": "e21d45b6-a1dc-4848-b4ca-ee44762238d4",
+      "Hash_password": "FA585D89C851DD338A70DCF535AA2A92FEE7836DD6AFF1226583E88E0996293F16BC009C652826E0FC5C706695A03CDDCE372F139EFF4D13959DA6F1F5D3EABE",
+      "Created_at": "2025-11-09T13:38:36.22302Z",
+      "Updated_at": null
+    }
+  ],
+  "Messages": [],
+  "Problems": [],
+  "Chanels": [],
+  "Group": [],
+  "GroupMember": []
+}
