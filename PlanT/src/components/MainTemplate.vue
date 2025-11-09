@@ -1,6 +1,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { isAuthenticated, getUserData } from '@/services/AuthService'
+// import { useAuthStore } from '@/stores/auth'
+
+// const authStore = useAuthStore()
+
+// const authState = computed(() => authStore.isAuthenticated)
+// const userData = computed(() => authStore.userData)
 
 const props = defineProps({
     hideHeader: {
@@ -16,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(['open-auth', 'open-notifications'])
 
 // Реальное состояние авторизации
-const authState = ref(true)
+const authState = ref(false)
 const userData = ref(null)
 
 // Данные уведомлений
@@ -82,18 +88,17 @@ const notificationsData = ref({
 const showAuthLinks = computed(() => !authState.value)
 const showUserLinks = computed(() => authState.value)
 
-// Проверяем авторизацию при загрузке компонента
-// onMounted(() => {
-//     checkAuth()
-// })
+onMounted(() => {
+    checkAuth()
+})
 
-// // Функция проверки авторизации
-// const checkAuth = () => {
-//     authState.value = isAuthenticated()
-//     if (authState.value) {
-//         userData.value = getUserData()
-//     }
-// }
+// Функция проверки авторизации
+const checkAuth = () => {
+    authState.value = isAuthenticated()
+    if (authState.value) {
+        userData.value = getUserData()
+    }
+}
 
 // Функция для открытия уведомлений
 const openNotifications = () => {

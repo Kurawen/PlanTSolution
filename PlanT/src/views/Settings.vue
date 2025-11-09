@@ -1,10 +1,14 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { logout as authLogout } from '@/services/AuthService' // Импортируем функцию выхода
 import defaultAvatar from '../assets/hanna.jpg'
+
+const router = useRouter()
 
 // Данные пользователя
 const user = ref({
-    avatar: defaultAvatar, // Путь к фото по умолчанию
+    avatar: defaultAvatar,
     username: 'Анастейша Стил',
     email: 'nastya50@mail.ru',
     phone: '+7 (123) 456-78-90'
@@ -33,11 +37,9 @@ const handleFileSelect = (event) => {
 }
 
 const changeAvatar = (file) => {
-    // Создаем URL для предпросмотра выбранного файла
     const reader = new FileReader()
     
     reader.onload = (e) => {
-        // Обновляем аватар на новый
         user.value.avatar = e.target.result
         console.log('Аватар обновлен')
     }
@@ -50,12 +52,17 @@ const saveChanges = () => {
         user: user.value,
         password: password.value
     })
-    // Логика сохранения изменений
 }
 
+// Функция выхода из аккаунта
 const logout = () => {
     console.log('Выход из аккаунта')
-    // Логика выхода из аккаунта
+    
+    // Вызываем функцию выхода из AuthService
+    authLogout()
+    
+    // Перенаправляем на главную страницу
+    window.location.href = '/'
 }
 
 const openModal = () => {

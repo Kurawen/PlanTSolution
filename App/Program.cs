@@ -69,8 +69,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowViteDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // база для приложения
 var app = builder.Build();
+
+app.UseCors("AllowViteDev");
 
 // Авто логирование всех Api кроме /login
 app.Use(async (context, next) =>
@@ -87,7 +100,6 @@ app.Use(async (context, next) =>
 
     logger.LogInformation("<=== Ошибка {StatusCode} - не удалось получить доступ - время работы: {ElapsedMs} ms",
         context.Response.StatusCode, elapsed.TotalMilliseconds);
-
 });
 
 // Configure the HTTP request pipeline.
@@ -103,7 +115,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ¯\_(ツ)_/¯ - не трогать
-// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));
+// app.Run(async (context) => await context.Response.SendFileAsync("pupu.jpg"));   
 
 // база для api
 app.UseHttpsRedirection();

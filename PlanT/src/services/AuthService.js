@@ -110,3 +110,9 @@ export const authFetch = async (url, options = {}) => {
 
     return response
 }
+
+// Функция выхода
+// export const logout = () => {
+//     const authStore = useAuthStore()
+//     authStore.logout()
+// }

@@ -4,6 +4,7 @@ import { isAuthenticated, getUserData } from '@/services/AuthService'
 import DevelopingModalWindow from '@/components/DevelopingModalWindow.vue'
 import Auth from '@/components/Authentication.vue'
 
+
 const showModal = ref(false)
 const showAuth = ref(false)
 const authMode = ref('login')
