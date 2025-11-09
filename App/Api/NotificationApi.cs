@@ -34,8 +34,8 @@ namespace App.Api
                     return Results.BadRequest("Message not found");
 
                 // Проверка существования задачи
-                var taskExists = await db.Problem.AnyAsync(t => t.Id == notification.Problem_id);
-                if (!taskExists)
+                var problemExists = await db.Problem.AnyAsync(t => t.Id == notification.Problem_id);
+                if (!problemExists)
                     return Results.BadRequest("Problem not found");
 
                 // Валидация типа уведомления
@@ -115,7 +115,7 @@ namespace App.Api
                     {
                         Notification = notification,
                         MessageContent = message.Content,
-                        TaskTitle = problem.Title,
+                        ProblemTitle = problem.Title,
                         SenderName = user.First_Name + " " + user.Last_Name,
                         SenderEmail = user.Email
                     }
@@ -137,8 +137,6 @@ namespace App.Api
             {
                 var notification = await db.Notifications.FindAsync(id);
                 if (notification is null) return Results.NotFound();
-
-                // User_id, Message_id, Task_id не обновляем - это неизменяемые связи
 
                 // Валидация типа уведомления (если изменен)
                 if (notification.Type != notificationData.Type)

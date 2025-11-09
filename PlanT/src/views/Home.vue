@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { isAuthenticated, getUserData } from '@/services/AuthService'
 import DevelopingModalWindow from '@/components/DevelopingModalWindow.vue'
 import Auth from '@/components/Authentication.vue'
 
@@ -7,8 +8,13 @@ const showModal = ref(false)
 const showAuth = ref(false)
 const authMode = ref('login')
 
-// Состояние авторизации
-const isAuthenticated = ref(true)
+// Состояние авторизации - используем реальную проверку
+const userIsAuthenticated = ref(false)
+
+// Проверяем авторизацию при загрузке
+onMounted(() => {
+  checkAuthStatus()
+})
 
 const openModal = () => {
     showModal.value = true
@@ -27,12 +33,17 @@ const closeAuth = () => {
     showAuth.value = false
 }
 
+// Функция проверки статуса авторизации
+const checkAuthStatus = () => {
+  userIsAuthenticated.value = isAuthenticated()
+}
+
 // Обработчики для авторизации
 const handleAuthSubmit = (data) => {
     console.log('Данные формы:', data)
-    // После успешной авторизации:
-    // isAuthenticated.value = true
-    // closeAuth()
+    // После успешной авторизации обновляем статус
+    checkAuthStatus()
+    closeAuth()
 }
 
 const handleSwitchMode = (newMode) => {
@@ -41,18 +52,20 @@ const handleSwitchMode = (newMode) => {
 
 const handleGuestLogin = () => {
     console.log('Гостевой вход')
-    // isAuthenticated.value = true
+    // Для гостевого входа можно установить флаг
+    userIsAuthenticated.value = true
     closeAuth()
 }
 
 // Вычисляемое свойство для отображения кнопок
-const showActionButtons = computed(() => isAuthenticated.value)
+const showActionButtons = computed(() => userIsAuthenticated.value)
 
-// Функция для демонстрации (уберите в продакшене)
-const toggleAuth = () => {
-    isAuthenticated.value = !isAuthenticated.value
+// Обработчик для кнопки "Начать сейчас"
+const handleStartNow = () => {
+  openAuth('login')
 }
 </script>
+
 
 <template>
     <!-- Основной контент -->
@@ -103,16 +116,19 @@ const toggleAuth = () => {
         </section>
 
         <!-- готовы улучшить свою продуктивность? -->
-        <section v-if="!isAuthenticated" class="prod" >
+        <section v-if="!userIsAuthenticated" class="prod" >
             <div class="prod-content">
                 <h2 class="prod-title">Готовы улучшить свою продуктивность?</h2>
-                <button class="btn-black btn-md" @click="openAuth">Начать сейчас</button>
+                <button class="btn-black btn-md" @click="handleStartNow">
+                    Начать сейчас
+                </button>
             </div>
         </section>
     </main>
     
     <DevelopingModalWindow v-if="showModal" @close="closeModal"/>
 
+    <!-- Модальное окно авторизации -->
     <div v-if="showAuth" class="auth-modal-overlay" @click="closeAuth">
         <div class="auth-modal-content" @click.stop>
             <Auth 
@@ -120,6 +136,7 @@ const toggleAuth = () => {
                 @submit="handleAuthSubmit"
                 @switch-mode="handleSwitchMode"
                 @guest-login="handleGuestLogin"
+                @close="closeAuth"
             />
         </div>
     </div>

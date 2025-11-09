@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { isAuthenticated, getUserData } from '@/services/AuthService'
 
 const props = defineProps({
     hideHeader: {
@@ -14,10 +15,11 @@ const props = defineProps({
 
 const emit = defineEmits(['open-auth', 'open-notifications'])
 
-// Состояние авторизации
-const isAuthenticated = ref(true)
+// Реальное состояние авторизации
+const authState = ref(true)
+const userData = ref(null)
 
-// Данные уведомлений перенесены из App.vue
+// Данные уведомлений
 const notificationsData = ref({
     chatNotifications: [
         {
@@ -77,13 +79,21 @@ const notificationsData = ref({
 })
 
 // Вычисляемые свойства для разных состояний
-const showAuthLinks = computed(() => !isAuthenticated.value)
-const showUserLinks = computed(() => isAuthenticated.value)
+const showAuthLinks = computed(() => !authState.value)
+const showUserLinks = computed(() => authState.value)
 
-// Функция для переключения состояния (для демонстрации)
-const toggleAuth = () => {
-    isAuthenticated.value = !isAuthenticated.value
-}
+// Проверяем авторизацию при загрузке компонента
+// onMounted(() => {
+//     checkAuth()
+// })
+
+// // Функция проверки авторизации
+// const checkAuth = () => {
+//     authState.value = isAuthenticated()
+//     if (authState.value) {
+//         userData.value = getUserData()
+//     }
+// }
 
 // Функция для открытия уведомлений
 const openNotifications = () => {
@@ -97,8 +107,12 @@ const openNotifications = () => {
         <header id="shapka" v-if="!hideHeader">
             <nav class="navbar">
                 <div class="nav-title">
-                    <a href="/"><img src="../assets/plant-logo.svg" alt="растение" class="plant-dev"></a>
-                    <a href="/" style="text-decoration: none;"><p class="nav-logo">PlanT</p></a>
+                    <router-link to="/">
+                        <img src="../assets/plant-logo.svg" alt="растение" class="plant-dev">
+                    </router-link>
+                    <router-link to="/" style="text-decoration: none;">
+                        <p class="nav-logo">PlanT</p>
+                    </router-link>
                 </div>
                 
                 <!-- Навигационные ссылки -->
@@ -133,15 +147,10 @@ const openNotifications = () => {
 
                     <!-- Для неавторизованных пользователей -->
                     <template v-if="showAuthLinks">
-                        <button class="login-btn" @click="emit('open-auth', 'login')">
+                        <button class="login-btn" @click="$emit('open-auth', 'login')">
                             Войти в аккаунт
                         </button>
                     </template>
-
-                    <!-- Кнопка для демонстрации (уберите в продакшене) -->
-                    <button v-if="false" class="demo-btn" @click="toggleAuth">
-                        {{ isAuthenticated ? 'Выйти' : 'Войти (демо)' }}
-                    </button>
                 </div>
             </nav>
         </header>
@@ -153,7 +162,7 @@ const openNotifications = () => {
         <!-- подвал -->
         <footer class="dno" v-if="!hideFooter">
             <p>2025</p>
-            <p>PlanT</p>
+            <p>© PlanT</p>
             <a href="https://t.me/myfavoritejumoreski" target="_blank">
                 <img src="../assets/telegram.svg" alt="телеграм" class="main-icon">
             </a>

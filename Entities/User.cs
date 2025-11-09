@@ -8,12 +8,10 @@ namespace Entities
         public Guid Id { get; set; }
 
         [MaxLength(36)]
-        
-        public string First_Name { get; set; }
+        public string? First_Name { get; set; }
 
         [MaxLength(36)]
-        
-        public string Last_Name { get; set; }
+        public string? Last_Name { get; set; }
 
         [Required]
         [EmailAddress]
