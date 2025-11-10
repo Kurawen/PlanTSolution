@@ -1,280 +1,232 @@
-<script>
-export default {
-    name: 'CreateProblem',
-    props: {
-        isVisible: Boolean
-    },
-    data() {
-        return {
-            task: {
-                title: '',
-                description: '',
-                dueDate: '',
-                assignee: '',
-                priority: ''
-            }
-        }
-    },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        saveTask() {
-            this.$emit('save', { ...this.task });
-            this.close();
-        },
-        cancel() {
-            this.close();
-        }
+<!-- ProblemCreate.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const emit = defineEmits(['close', 'create-task'])
+
+const newTask = ref({
+    title: '',
+    deadline: '',
+    status: 'не начато',
+    priority: 'средний',
+    executor: ''
+})
+
+const createTask = () => {
+    if (!newTask.value.title.trim()) {
+        alert('Введите название задачи')
+        return
     }
+
+    emit('create-task', { ...newTask.value })
+}
+
+const resetForm = () => {
+    newTask.value = {
+        title: '',
+        deadline: '',
+        status: 'к выполнению',
+        priority: 'средний',
+        executor: ''
+    }
+}
+
+const closeModal = () => {
+    resetForm()
+    emit('close')
 }
 </script>
 
 <template>
-    <div id="problem-container">
-        <div id="problem-window">
-            <div class="problem-top">
-                <div class="problem-title">
-                    <h2>Создать задачу</h2>
-                    <p>Заполните детали новой задачи</p>
-                </div>
-                <button class="close-btn" @click="close">×</button>
+    <div class="modal-overlay">
+        <div class="modal-content" @click.stop>
+            <div class="modal-header">
+                <h2>Создание новой задачи</h2>
+                <button class="close-btn" @click="closeModal">×</button>
             </div>
             
-            <div class="problem-forms">
-                <div class="form-group">
-                    <label for="name" class="problem-label">Название задачи</label>
-                    <input 
-                        class="problem-input" 
-                        placeholder="Введите название задачи" 
-                        type="text" 
-                        id="name" 
-                        v-model="task.title" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="desc" class="problem-label">Описание</label>
-                    <textarea 
-                        class="problem-textarea" 
-                        placeholder="Опишите задачу подробно" 
-                        id="desc" 
-                        v-model="task.description" 
-                        required
-                        rows="4"
-                    ></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="date" class="problem-label">Срок выполнения</label>
-                    <input 
-                        class="problem-input" 
-                        placeholder="Выберите дату" 
-                        type="date" 
-                        id="date" 
-                        v-model="task.dueDate" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="exec" class="problem-label">Исполнитель</label>
-                    <input 
-                        class="problem-input" 
-                        placeholder="Назначить исполнителя" 
-                        type="text" 
-                        id="exec" 
-                        v-model="task.assignee" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="prior" class="problem-label">Приоритет</label>
-                    <select 
-                        class="problem-select" 
-                        id="prior" 
-                        v-model="task.priority" 
-                        required
-                    >
-                        <option value="" disabled selected>Установить приоритет</option>
-                        <option value="low">Низкий</option>
-                        <option value="medium">Средний</option>
-                        <option value="high">Высокий</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="problem-actions">
-                <button class="btn-cancel" @click="cancel">Отмена</button>
-                <button class="btn-save" @click="saveTask">Сохранить</button>
+            <div class="modal-body">
+                <form @submit.prevent="createTask">
+                    <div class="form-group">
+                        <label for="title">Название задачи *</label>
+                        <input
+                            id="title"
+                            v-model="newTask.title"
+                            type="text"
+                            placeholder="Введите название задачи"
+                            required
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deadline">Срок выполнения</label>
+                        <input
+                            id="deadline"
+                            v-model="newTask.deadline"
+                            type="date"
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Статус</label>
+                        <select id="status" v-model="newTask.status">
+                            <option value="не начато">Не начато</option>
+                            <option value="в работе">В работе</option>
+                            <option value="завершено">Завершено</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="priority">Приоритет</label>
+                        <select id="priority" v-model="newTask.priority">
+                            <option value="низкий">Низкий</option>
+                            <option value="средний">Средний</option>
+                            <option value="высокий">Высокий</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="executor">Исполнитель</label>
+                        <input
+                            id="executor"
+                            v-model="newTask.executor"
+                            type="text"
+                            placeholder="Введите имя исполнителя"
+                        />
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-gray btn-md" @click="closeModal">
+                            Отмена
+                        </button>
+                        <button type="submit" class="btn-black btn-md">
+                            Создать задачу
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-#problem-container {
+.modal-overlay {
     position: fixed;
-    display: flex;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-#problem-window {
-    padding: 30px;
-    background-color: white;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    width: 480px;
-    gap: 24px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-.problem-top {
+.modal-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e1e5e9;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.problem-title h2 {
-    font-weight: 700;
+.modal-header h2 {
     font-size: 1.5rem;
-    color: #1a1a1a;
-    margin: 0 0 4px 0;
-}
-
-.problem-title p {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0;
 }
 
 .close-btn {
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: black;
     cursor: pointer;
+    color: #666;
     padding: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.problem-forms {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.close-btn:hover {
+    background: var(--bg-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    margin-bottom: 1.5rem;
 }
 
-.problem-label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: black;
 }
 
-.problem-input,
-.problem-textarea,
-.problem-select {
+.form-group input,
+.form-group select {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
-.problem-input:focus,
-.problem-textarea:focus,
-.problem-select:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: black;
 }
 
-.problem-textarea {
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.4;
-}
-
-.problem-select {
-    background-color: white;
-    cursor: pointer;
-}
-
-.problem-actions {
+.form-actions {
     display: flex;
-    gap: 12px;
+    gap: 1rem;
     justify-content: flex-end;
-    padding-top: 16px;
-    border-top: 1px solid #e1e5e9;
+    margin-top: 2rem;
 }
 
-.btn-cancel,
-.btn-save {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-cancel {
-    background-color: white;
-    color: #333;
+.cancel-btn {
+    padding: 0.75rem 1.5rem;
     border: 2px solid var(--border-color);
+    border-radius: 5px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
-.btn-cancel:hover {
-    background-color: var(--bg-color);
+.cancel-btn:hover {
+    background: var(--bg-color);
 }
 
-.btn-save {
-    background-color: black;
-    color: white;
+.create-btn {
+    padding: 0.75rem 1.5rem;
     border: 2px solid black;
+    border-radius: 4px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: ease-in-out 0.3s;
 }
 
-.btn-save:hover {
+.create-btn:hover {
     background-color: white;
     color: black;
-    transform: translateY(-1px);
-}
-
-.btn-save:active {
-    transform: translateY(0);
-}
-
-.problem-input::placeholder,
-.problem-textarea::placeholder {
-    color: #999;
-}
-
-.problem-select option[disabled] {
-    color: #999;
 }
 </style>

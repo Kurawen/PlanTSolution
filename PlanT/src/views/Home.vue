@@ -1,14 +1,21 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { isAuthenticated, getUserData } from '@/services/AuthService'
 import DevelopingModalWindow from '@/components/DevelopingModalWindow.vue'
 import Auth from '@/components/Authentication.vue'
+
 
 const showModal = ref(false)
 const showAuth = ref(false)
 const authMode = ref('login')
 
-// Состояние авторизации
-const isAuthenticated = ref(true)
+// Состояние авторизации - используем реальную проверку
+const userIsAuthenticated = ref(false)
+
+// Проверяем авторизацию при загрузке
+onMounted(() => {
+  checkAuthStatus()
+})
 
 const openModal = () => {
     showModal.value = true
@@ -27,12 +34,17 @@ const closeAuth = () => {
     showAuth.value = false
 }
 
+// Функция проверки статуса авторизации
+const checkAuthStatus = () => {
+  userIsAuthenticated.value = isAuthenticated()
+}
+
 // Обработчики для авторизации
 const handleAuthSubmit = (data) => {
     console.log('Данные формы:', data)
-    // После успешной авторизации:
-    // isAuthenticated.value = true
-    // closeAuth()
+    // После успешной авторизации обновляем статус
+    checkAuthStatus()
+    closeAuth()
 }
 
 const handleSwitchMode = (newMode) => {
@@ -41,18 +53,20 @@ const handleSwitchMode = (newMode) => {
 
 const handleGuestLogin = () => {
     console.log('Гостевой вход')
-    // isAuthenticated.value = true
+    // Для гостевого входа можно установить флаг
+    userIsAuthenticated.value = true
     closeAuth()
 }
 
 // Вычисляемое свойство для отображения кнопок
-const showActionButtons = computed(() => isAuthenticated.value)
+const showActionButtons = computed(() => userIsAuthenticated.value)
 
-// Функция для демонстрации (уберите в продакшене)
-const toggleAuth = () => {
-    isAuthenticated.value = !isAuthenticated.value
+// Обработчик для кнопки "Начать сейчас"
+const handleStartNow = () => {
+  openAuth('login')
 }
 </script>
+
 
 <template>
     <!-- Основной контент -->
@@ -63,7 +77,7 @@ const toggleAuth = () => {
                 <h1 class="tasks-title">Работайте над задачами</h1>
                 <p class="tasks-desc">
                     <strong>PlanT</strong> дает возможность студентам организовывать проекты и без особых 
-                    усилий сотрудничать и достигать целей. Прищей можно работать как одному, так и в команде.
+                    усилий сотрудничать и достигать целей.
                 </p>
             </div>
             <img src="../assets/plant-big.svg" alt="растение" class="tasks-plant-img">
@@ -79,7 +93,7 @@ const toggleAuth = () => {
                         <h3>Управление задачами</h3>
                     </div>
                     <p class="keys-desc">Управляйте задачами и достигайте высот.</p>
-                    <router-link v-if="showActionButtons" to="/problems" class="keys-btn">Перейти к задачам</router-link>
+                    <router-link v-if="showActionButtons" to="/problems" class="btn-gray btn-md">Перейти к задачам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -88,7 +102,7 @@ const toggleAuth = () => {
                         <h3>Работа в команде</h3>
                     </div>
                     <p class="keys-desc">Создавайте группы. Создавайте контент.</p>
-                    <router-link v-if="showActionButtons"  to="/squads" class="keys-btn">Перейти к группам</router-link>
+                    <router-link v-if="showActionButtons"  to="/squads" class="btn-gray btn-md">Перейти к группам</router-link>
                 </div>
 
                 <div class="keys-card" :class="{ 'keys-card-compact': !showActionButtons }">
@@ -97,22 +111,25 @@ const toggleAuth = () => {
                         <h3>Коммуникация</h3>
                     </div>
                     <p class="keys-desc">Взаимодействуйте с вашей командой.</p>
-                    <router-link v-if="showActionButtons"  to="/messages" class="keys-btn">Перейти к сообщениям</router-link>
+                    <router-link v-if="showActionButtons"  to="/messages" class="btn-gray btn-md">Перейти к сообщениям</router-link>
                 </div>
             </div>
         </section>
 
         <!-- готовы улучшить свою продуктивность? -->
-        <section v-if="!isAuthenticated" class="prod" >
+        <section v-if="!userIsAuthenticated" class="prod" >
             <div class="prod-content">
                 <h2 class="prod-title">Готовы улучшить свою продуктивность?</h2>
-                <button class="prod-btn" @click="openAuth">Начать сейчас</button>
+                <button class="btn-black btn-lg" @click="handleStartNow">
+                    Начать сейчас
+                </button>
             </div>
         </section>
     </main>
     
     <DevelopingModalWindow v-if="showModal" @close="closeModal"/>
 
+    <!-- Модальное окно авторизации -->
     <div v-if="showAuth" class="auth-modal-overlay" @click="closeAuth">
         <div class="auth-modal-content" @click.stop>
             <Auth 
@@ -120,6 +137,7 @@ const toggleAuth = () => {
                 @submit="handleAuthSubmit"
                 @switch-mode="handleSwitchMode"
                 @guest-login="handleGuestLogin"
+                @close="closeAuth"
             />
         </div>
     </div>
@@ -128,9 +146,9 @@ const toggleAuth = () => {
 <style scoped>
 /* работа над задачами */
 .tasks {
-    background-color: var(--bg-color);
-    margin: 0 12rem;
-    padding: 3rem 4rem;
+    background-color: rgb(236, 236, 236);
+    margin: 0 14rem;
+    padding: 3rem 5rem;
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -148,12 +166,11 @@ const toggleAuth = () => {
     gap: 30px;
     text-align: start;
 }
-
-.tasks-title {
+.tasks-content > h1 {
     color: black;
     font-size: 3rem;
     font-family: var(--text-header);
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .tasks-desc {
@@ -197,7 +214,7 @@ const toggleAuth = () => {
 
 .keys-card {
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 5px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     text-align: left;
     transition: all 0.3s ease;
@@ -233,24 +250,6 @@ const toggleAuth = () => {
     color: gray;
     line-height: 1.6;
     flex: 1;
-}
-
-.keys-btn {
-    text-decoration: none;
-    color: black;
-    background: transparent;
-    border: 2px solid var(--border-color);
-    border-radius: 5px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    align-self: flex-start;
-    margin-top: auto;
-}
-
-.keys-btn:hover {
-    background-color: var(--bg-color);
 }
 
 /* улучшение продуктивности */

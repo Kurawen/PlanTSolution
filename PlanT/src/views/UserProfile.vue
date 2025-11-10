@@ -59,7 +59,7 @@ const saveProfile = () => {
         <div class="profile-card">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    <span>{{ getInitials }}</span>
+                    <img src="../assets/margo.jpg" alt="" class="profile-avatar">
                 </div>
                 <h1 class="profile-name">{{ profile.name }}</h1>
                 <div class="contact-info">
@@ -75,7 +75,7 @@ const saveProfile = () => {
             <div class="profile-body">
                 <div class="section">
                     <h2 class="section-title">Профиль</h2>
-                    <router-link to="/settings" class="section-change">Редактировать профиль</router-link>
+                    <router-link to="/settings" class="btn-black btn-md">Редактировать профиль</router-link>
 
                 </div>
                 
@@ -97,15 +97,14 @@ const saveProfile = () => {
 
 <style scoped>
 .profile-page {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 .profile-card {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin-bottom: 24px;
 }
@@ -121,14 +120,11 @@ const saveProfile = () => {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 4px solid white;
-    background-color: #d1e0f0;
     margin: 0 auto 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 48px;
-    color: #4a6fa5;
     font-weight: bold;
 }
 
@@ -173,50 +169,10 @@ const saveProfile = () => {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 16px;
-    color: #2c3e50;
+    color: black;
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.section-change {
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: black;
-    background-color: white;
-    border-radius: 5px;
-    border: 2px solid var(--border-color);
-    padding: 10px 15px;
-}
-
-.section-change:hover {
-    background-color: var(--bg-color);
-}
-
-.section-title::after {
-    content: '';
-    flex-grow: 1;
-    height: 1px;
-    background-color: #e1e8ed;
-    margin-left: 10px;
-}
-
-.btn {
-    background-color: #4a6fa5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn:hover {
-    background-color: #6b8cbc;
 }
 
 .groups-list {
@@ -226,15 +182,14 @@ const saveProfile = () => {
 }
 
 .group-item {
-    background-color: var(--bg-color);
-    border-radius: 8px;
+    border: 2px solid black;
+    border-radius: 5px;
     padding: 16px;
     transition: all 0.3s ease;
 }
 
 .group-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .group-name {
@@ -245,45 +200,6 @@ const saveProfile = () => {
 .group-role {
     color: grey;
     font-size: 14px;
-}
-
-.edit-form {
-    background-color: #f5f7fa;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 16px;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-.form-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e1e8ed;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.form-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
 }
 
 </style>

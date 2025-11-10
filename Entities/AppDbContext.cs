@@ -16,12 +16,21 @@ namespace Entities
         public DbSet<User_profile> UserProfiles { get; set; }
         public DbSet<Problem> Problem { get; set; }
         public DbSet<User_password> UserPasswords { get; set; }
-        // public DbSet<Task_comment> TaskComments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Group_member> GroupMembers { get; set; }
         public DbSet<Channel> Channels { get; set; }
 
+        public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+        {
+            public AppDbContext CreateDbContext(string[] args)
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PlanT;Persist Security Info=True;User ID=postgres;Password=123");
+
+                return new AppDbContext(optionsBuilder.Options);
+            }
+        }
     }
 }

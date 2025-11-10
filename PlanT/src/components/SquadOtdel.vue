@@ -74,7 +74,8 @@ const closeInnerModals = () => {
                                 <h3>{{ file.name }}</h3>
                                 <p>{{ file.type }} | Загружено: {{ file.date }}</p>
                             </div>
-                            <button class="download-btn">↓</button>
+                            
+                            <a href="../assets/hanna.jpg" download=""><button class="download-btn" download>↓</button></a>
                         </div>
                     </div>
                 </div>
@@ -83,13 +84,13 @@ const closeInnerModals = () => {
                 <div class="actions-section">
                     <h2>Действия</h2>
                     <div class="actions-grid">
-                        <button class="action-btn primary" @click="openInviteModal">
+                        <button class="btn-black btn-md" @click="openInviteModal">
                             <span>Пригласить участника</span>
                         </button>
-                        <button class="action-btn" @click="openUploadModal">
+                        <button class="btn-black btn-md" @click="openUploadModal">
                             <span>Загрузить файл</span>
                         </button>
-                        <button class="action-btn" @click="openEditModal">
+                        <button class="btn-black btn-md" @click="openEditModal">
                             <span>Редактировать группу</span>
                         </button>
                     </div>
@@ -169,6 +170,13 @@ const closeInnerModals = () => {
     max-width: 100%;
 }
 
+.squad-window > p {
+    color: gray;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
 .squad-header {
     display: flex;
     justify-content: space-between;
@@ -186,13 +194,6 @@ const closeInnerModals = () => {
     font-size: 2rem;
     cursor: pointer;
     padding: 5px;
-}
-
-.squad-description {
-    color: #6c757d;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
 }
 
 .section {

@@ -18,7 +18,7 @@ namespace Entities
 
         [Required]
         [MaxLength(20)]
-        public string Type { get; set; } // "message", "task_assigned", "task_completed" и т.д.
+        public string Type { get; set; }
 
         [MaxLength(500)]
         public string Content { get; set; }

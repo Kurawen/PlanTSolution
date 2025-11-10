@@ -1,18 +1,21 @@
 :root {
     --border-color: #DEE1E6FF;
-    --text-color: #565d6d;
-    --bg-color: #f8f8f8;
+    --text-color: #414142;
+    --bg-color: #eaeaea;
+    --bg2-color: rgb(244, 244, 244);
     
     --text-header: "Nunito Sans", sans-serif;
     --text-font: "Rubik", sans-serif;
 
-    --prior-high: #d9636a;
+    --prior-high: #e13642;
     --prior-middle: #f77314;
     --prior-low: #4385c5;
 
     --status-process: black;
     --status-done: #1fc45d;
     --status-overdue: #d9636a;
+
+    
 }
 
 * {
@@ -21,4 +24,73 @@
     box-sizing: border-box;
     font-family: var(--text-font);
     box-sizing: border-box;
+}
+
+.btn-gray {
+    text-decoration: none;
+    background: white;
+    color: black;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-gray:hover {
+    background: var(--bg-color);
+}
+
+.btn-black {
+    text-decoration: none;
+    background: black;
+    color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-black:hover {
+    background: white;
+    color: black;
+}
+
+.btn-red {
+    text-decoration: none;
+    background: red;
+    color: white;
+    border: 2px solid red;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-red:hover {
+    background: white;
+    color: red;
+}
+
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-md {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Entities.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250929055650_blabla")]
-    partial class blabla
+    [Migration("20251109105116_reg_update")]
+    partial class reg_update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,8 +43,6 @@ namespace Entities.Migrations
                         .HasColumnType("character varying(36)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Group_id");
 
                     b.ToTable("Channels");
                 });
@@ -97,10 +95,6 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Group_id");
-
-                    b.HasIndex("User_id");
-
                     b.ToTable("GroupMembers");
                 });
 
@@ -126,10 +120,6 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Channel_id");
-
-                    b.HasIndex("User_id");
-
                     b.ToTable("Messages");
                 });
 
@@ -139,32 +129,50 @@ namespace Entities.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("Created_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Is_read")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("Message_id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("Task_id")
+                    b.Property<Guid>("Problem_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("User_id")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Message_id");
-
-                    b.HasIndex("Task_id");
-
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Entities.Task", b =>
+            modelBuilder.Entity("Entities.Problem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("Assigned_to")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Created_by")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Created_by")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -174,6 +182,9 @@ namespace Entities.Migrations
                     b.Property<DateTime>("Due_date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("Group_id")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Priority")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -181,8 +192,8 @@ namespace Entities.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -194,36 +205,7 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Task");
-                });
-
-            modelBuilder.Entity("Entities.Task_comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<DateTime>("Created_at")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Task_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("User_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Task_id");
-
-                    b.HasIndex("User_id");
-
-                    b.ToTable("TaskComments");
+                    b.ToTable("Problem");
                 });
 
             modelBuilder.Entity("Entities.User", b =>
@@ -240,12 +222,10 @@ namespace Entities.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("First_Name")
-                        .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("character varying(36)");
 
                     b.Property<string>("Last_Name")
-                        .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("character varying(36)");
 
@@ -260,16 +240,20 @@ namespace Entities.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("Created_at")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Hash_password")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("Updated_at")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("User_id")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("User_id");
 
                     b.ToTable("UserPasswords");
                 });
@@ -284,10 +268,6 @@ namespace Entities.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Bio")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Phone_number")
                         .IsRequired()
                         .HasColumnType("text");
@@ -297,118 +277,7 @@ namespace Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("User_id");
-
                     b.ToTable("UserProfiles");
-                });
-
-            modelBuilder.Entity("Entities.Channel", b =>
-                {
-                    b.HasOne("Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("Group_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("Entities.Group_member", b =>
-                {
-                    b.HasOne("Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("Group_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.Message", b =>
-                {
-                    b.HasOne("Entities.Channel", "Channel")
-                        .WithMany()
-                        .HasForeignKey("Channel_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Channel");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.Notification", b =>
-                {
-                    b.HasOne("Entities.Message", "Message")
-                        .WithMany()
-                        .HasForeignKey("Message_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("Task_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Message");
-
-                    b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Entities.Task_comment", b =>
-                {
-                    b.HasOne("Entities.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("Task_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.User_password", b =>
-                {
-                    b.HasOne("Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.User_profile", b =>
-                {
-                    b.HasOne("Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

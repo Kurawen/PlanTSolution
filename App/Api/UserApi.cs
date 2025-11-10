@@ -3,46 +3,36 @@ using Entities;
 
 namespace App.Api
 {
-    public static class User_Api
+    public static class UserApi
     {
         public static RouteGroupBuilder MapUserApi(this RouteGroupBuilder api)
         {
             // POST - создать пользователя
             api.MapPost("/", async (User user, AppDbContext db) =>
             {
-                // Валидация обязательных полей
-                if (string.IsNullOrEmpty(user.First_Name))
-                    return Results.BadRequest("First name is required");
-
-                if (string.IsNullOrEmpty(user.Last_Name))
-                    return Results.BadRequest("Last name is required");
-
                 if (string.IsNullOrEmpty(user.Email))
                     return Results.BadRequest("Email is required");
 
-                // Валидация email формата
                 if (!IsValidEmail(user.Email))
                     return Results.BadRequest("Invalid email format");
 
-                // Проверка уникальности email
                 var existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
                 if (existingUser != null)
                     return Results.BadRequest("User with this email already exists");
 
-                // Создаем нового пользователя
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
-                    First_Name = user.First_Name.Trim(),
-                    Last_Name = user.Last_Name.Trim(),
                     Email = user.Email.ToLower().Trim(),
+                    First_Name = user.First_Name?.Trim(),
+                    Last_Name = user.Last_Name?.Trim(),
                     Created_at = DateTime.UtcNow
                 };
 
                 db.Users.Add(newUser);
                 await db.SaveChangesAsync();
                 return Results.Created($"/users/{newUser.Id}", newUser);
-            });
+            }).RequireAuthorization();
 
             // GET - получить всех пользователей
             api.MapGet("/", async (AppDbContext db) => await db.Users.ToListAsync());
@@ -107,21 +97,13 @@ namespace App.Api
                 var user = await db.Users.FindAsync(id);
                 if (user is null) return Results.NotFound();
 
-                // Валидация обязательных полей
-                if (string.IsNullOrEmpty(userData.First_Name))
-                    return Results.BadRequest("First name is required");
-
-                if (string.IsNullOrEmpty(userData.Last_Name))
-                    return Results.BadRequest("Last name is required");
-
                 if (string.IsNullOrEmpty(userData.Email))
                     return Results.BadRequest("Email is required");
 
-                // Валидация email формата
                 if (!IsValidEmail(userData.Email))
                     return Results.BadRequest("Invalid email format");
 
-                // Проверка уникальности email (если email изменен)
+                // Проверка уникальности email
                 if (user.Email != userData.Email.ToLower())
                 {
                     var emailExists = await db.Users.AnyAsync(u => u.Email == userData.Email.ToLower() && u.Id != id);
@@ -129,30 +111,24 @@ namespace App.Api
                         return Results.BadRequest("User with this email already exists");
                 }
 
-                // Обновляем поля пользователя
-                user.First_Name = userData.First_Name.Trim();
-                user.Last_Name = userData.Last_Name.Trim();
+                // Обновляем поля
+                user.First_Name = userData.First_Name?.Trim();
+                user.Last_Name = userData.Last_Name?.Trim();
                 user.Email = userData.Email.ToLower().Trim();
-                // Created_at не обновляем - это неизменяемое поле
 
                 await db.SaveChangesAsync();
                 return Results.Ok(user);
             });
 
-            // PATCH - обновить имя пользователя
+            // PATCH - обновить имя пользователя (теперь не обязательны)
             api.MapPatch("/{id}/name", async (Guid id, UpdateUserNameRequest request, AppDbContext db) =>
             {
                 var user = await db.Users.FindAsync(id);
                 if (user is null) return Results.NotFound();
 
-                if (string.IsNullOrEmpty(request.First_Name))
-                    return Results.BadRequest("First name is required");
-
-                if (string.IsNullOrEmpty(request.Last_Name))
-                    return Results.BadRequest("Last name is required");
-
-                user.First_Name = request.First_Name.Trim();
-                user.Last_Name = request.Last_Name.Trim();
+                // Убираем валидацию на обязательность
+                user.First_Name = request.First_Name?.Trim();
+                user.Last_Name = request.Last_Name?.Trim();
 
                 await db.SaveChangesAsync();
                 return Results.Ok(user);
@@ -190,11 +166,11 @@ namespace App.Api
                 var hasProfile = await db.UserProfiles.AnyAsync(p => p.User_id == id);
                 var hasMessages = await db.Messages.AnyAsync(m => m.User_id == id);
                 var hasGroupMemberships = await db.GroupMembers.AnyAsync(gm => gm.User_id == id);
-                var hasTasksCreated = await db.Problem.AnyAsync(t => t.Created_by == id);
-                var hasTasksAssigned = await db.Problem.AnyAsync(t => t.Assigned_to == id);
+                var hasProblemsCreated = await db.Problem.AnyAsync(t => t.Created_by == id);
+                var hasProblemsAssigned = await db.Problem.AnyAsync(t => t.Assigned_to == id);
                 var hasPassword = await db.UserPasswords.AnyAsync(up => up.User_id == id);
 
-                if (hasProfile || hasMessages || hasGroupMemberships || hasTasksCreated || hasTasksAssigned || hasPassword)
+                if (hasProfile || hasMessages || hasGroupMemberships || hasProblemsCreated || hasProblemsAssigned || hasPassword)
                 {
                     return Results.BadRequest("Cannot delete user with existing related data. Delete related data first.");
                 }
