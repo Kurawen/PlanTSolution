@@ -6,10 +6,24 @@ import DevelopingModalWindow from './components/DevelopingModalWindow.vue'
 import Auth from './components/Authentication.vue'
 import Notifications from './components/Notifications.vue'
 
+// Интерфейсы для типизации
+interface AuthData {
+    email: string
+    password: string
+    firstName?: string
+    lastName?: string
+}
+
+interface NotificationData {
+    chatNotifications: any[]
+    taskNotifications: any[]
+}
+
+
 const showModal = ref(false)
 const showAuth = ref(false)
-const authMode = ref('login')
-const notificationsData = ref(null)
+const authMode = ref<'login' | 'register'>('login')
+const notificationsData = ref<NotificationData | null>(null)
 
 const openModal = () => {
     showModal.value = true
@@ -20,7 +34,7 @@ const closeModal = () => {
     notificationsData.value = null
 }
 
-const openAuth = (mode = 'login') => {
+const openAuth = (mode: 'login' | 'register' = 'login') => {
     authMode.value = mode
     showAuth.value = true
 }
@@ -29,14 +43,14 @@ const closeAuth = () => {
     showAuth.value = false
 }
 
-const handleAuthSubmit = (data) => {
+const handleAuthSubmit = (data: AuthData) => {
     console.log('Данные формы:', data)
     // Здесь будет логика авторизации/регистрации
     // После успешной авторизации:
     // closeAuth()
 }
 
-const handleSwitchMode = (newMode) => {
+const handleSwitchMode = (newMode: 'login' | 'register') => {
     authMode.value = newMode
 }
 
@@ -46,7 +60,7 @@ const handleGuestLogin = () => {
     // Логика для гостевого режима
 }
 
-const handleOpenNotifications = (data) => {
+const handleOpenNotifications = (data: NotificationData) => {
     notificationsData.value = data
     showModal.value = true
 }
@@ -60,11 +74,6 @@ const handleOpenNotifications = (data) => {
     >
         
         <RouterView/>
-
-        <!-- Отладочная информация -->
-        <!-- <div style="position: fixed; top: 10px; right: 10px; background: red; color: white; padding: 10px; z-index: 9999">
-            RouterView: {{ $route.path }}
-        </div> -->
 
         <!-- модальное окно авторизации/регистрации -->
         <div v-if="showAuth" class="auth-modal-overlay" @click="closeAuth">

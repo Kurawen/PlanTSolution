@@ -1,20 +1,33 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 
-const props = defineProps({
-    chatNotifications: {
-        type: Array,
-        default: () => []
-    },
-    taskNotifications: {
-        type: Array,
-        default: () => []
-    }
-})
+interface ChatNotification {
+    id: string | number
+    title: string
+    message: string
+    time: string
+    avatar?: string
+}
 
-const emit = defineEmits(['close'])
+interface TaskNotification {
+    id: string | number
+    title: string
+    assignee: string
+    dueDate: string
+    priority: 'high' | 'medium' | 'low'
+    status?: string
+}
 
-const getPriorityClass = (priority) => {
+const props = defineProps<{
+    chatNotifications: ChatNotification[]
+    taskNotifications: TaskNotification[]
+}>()
+
+const emit = defineEmits<{
+    close: []
+}>()
+
+const getPriorityClass = (priority: 'high' | 'medium' | 'low') => {
     const classes = {
         'high': 'priority-high',
         'medium': 'priority-medium',
