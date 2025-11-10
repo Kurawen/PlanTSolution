@@ -2,8 +2,18 @@
 Корпоративное приложение для заметок
 
 ## Запуск
-⚙️ В разработке ⚙️
-
+### Клонирование проекта 
+```C
+git clone https://github.com/Kurawen/PlanTSolution.git
+```
+### Backend
+```bash
+cd PlanTSolution/App && dotnet run
+```
+### Frontend
+```bash
+cd PlanTSolution/PlanT && npm run dev
+```
 ## Анекдоты
 1) Как называется страна, в которой нет пони? 
 
