@@ -59,7 +59,7 @@ const saveProfile = () => {
         <div class="profile-card">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    <img src="../assets/hanna.jpg" alt="" class="profile-avatar">
+                    <img src="../assets/margo.jpg" alt="" class="profile-avatar">
                 </div>
                 <h1 class="profile-name">{{ profile.name }}</h1>
                 <div class="contact-info">

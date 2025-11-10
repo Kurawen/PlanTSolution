@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { logout as authLogout } from '@/services/AuthService' // Импортируем функцию выхода
-import defaultAvatar from '../assets/hanna.jpg'
+import defaultAvatar from '../assets/margo.jpg'
 
 const router = useRouter()
 

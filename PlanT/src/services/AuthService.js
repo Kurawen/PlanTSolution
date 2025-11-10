@@ -18,14 +18,14 @@ export const register = async (email, password) => {
         })
 
         if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || 'Ошибка регистрации')
+            const errorData = await response.json()
+            throw new Error(errorData.detail || 'Ошибка регистрации')
         }
 
         const data = await response.json()
         return { success: true, data }
-        
-    } catch (error) {
+    } 
+    catch (error) {
         return { success: false, error: error.message }
     }
 }
@@ -45,8 +45,8 @@ export const login = async (email, password) => {
         })
 
         if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || 'Ошибка входа')
+            const errorData = await response.json()
+            throw new Error(errorData.detail || 'Ошибка входа')
         }
 
         const data = await response.json()
@@ -58,8 +58,8 @@ export const login = async (email, password) => {
         localStorage.setItem('userId', data.userId)
         
         return { success: true, data }
-        
-    } catch (error) {
+    } 
+    catch (error) {
         return { success: false, error: error.message }
     }
 }

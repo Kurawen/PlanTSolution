@@ -56,7 +56,7 @@ const notificationsData = ref({
             title: 'Разработать фичу авторизации',
             status: 'Приближается срок',
             assignee: 'Анна Смирнова',
-            priority: 'high',
+            priority: 'высокий',
             dueDate: '2024-07-30'
         },
         {
@@ -64,14 +64,14 @@ const notificationsData = ref({
             title: 'Обзор дизайна домашней страницы',
             assignee: 'Дмитрий Иванов',
             dueDate: '30.07.2024',
-            priority: 'medium'
+            priority: 'средний'
         },
         {
             id: 3,
             title: 'Исправить ошибку #BUG-456',
             assignee: 'Сергей Петров',
             dueDate: '15.07.2024',
-            priority: 'high'
+            priority: 'высокий'
         },
         {
             id: 4,
@@ -79,7 +79,7 @@ const notificationsData = ref({
             assignee: 'Елена Кузнецова',
             dueDate: '28.07.2024',
             status: 'Продолжается срок',
-            priority: 'medium'
+            priority: 'низкий'
         }
     ]
 })
@@ -146,13 +146,13 @@ const openNotifications = () => {
                             @click="openNotifications"
                         >
                         <router-link to="/profile">
-                            <img src="../assets/hanna.jpg" alt="личный кабинет" class="photo-link">
+                            <img src="../assets/margo.jpg" alt="личный кабинет" class="photo-link">
                         </router-link>
                     </template>
 
                     <!-- Для неавторизованных пользователей -->
                     <template v-if="showAuthLinks">
-                        <button class="login-btn" @click="$emit('open-auth', 'login')">
+                        <button class="btn-gray btn-md" @click="$emit('open-auth', 'login')">
                             Войти в аккаунт
                         </button>
                     </template>
@@ -255,38 +255,6 @@ const openNotifications = () => {
     gap: 20px;
     align-items: center;
     justify-content: center;
-}
-
-.login-btn {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: fit-content;
-}
-
-.login-btn:hover {
-    background: var(--bg-color);
-}
-
-/* Кнопка для демонстрации (скрыта по умолчанию) */
-.demo-btn {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-.demo-btn:hover {
-    opacity: 1;
 }
 
 #main {

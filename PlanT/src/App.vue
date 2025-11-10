@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router'
 import MainTemplate from './components/MainTemplate.vue'
 import DevelopingModalWindow from './components/DevelopingModalWindow.vue'
 import Auth from './components/Authentication.vue'
-import Notifications from './components/Notifications.vue';
+import Notifications from './components/Notifications.vue'
 
 const showModal = ref(false)
 const showAuth = ref(false)

@@ -120,7 +120,7 @@ const handleStartNow = () => {
         <section v-if="!userIsAuthenticated" class="prod" >
             <div class="prod-content">
                 <h2 class="prod-title">Готовы улучшить свою продуктивность?</h2>
-                <button class="btn-black btn-md" @click="handleStartNow">
+                <button class="btn-black btn-lg" @click="handleStartNow">
                     Начать сейчас
                 </button>
             </div>
